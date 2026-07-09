@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>로그인 — 오재</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+:root{
+  --red:#E0403C; --red-deep:#A32D2D; --red-tint:#FCEBEB;
+  --ink:#191F28; --gray:#8B95A1; --gray-light:#B0B8C1;
+  --bg:#FFFFFF; --card:#FFFFFF; --line:#EEF0F2;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:Pretendard,-apple-system,sans-serif;background:#EDEEF0;color:var(--ink);letter-spacing:-0.2px}
+.app{max-width:420px;margin:0 auto;background:var(--bg);min-height:100vh;padding-bottom:88px;position:relative}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+.hd{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;background:var(--bg)}
+.hd h1{font-size:21px;font-weight:800;letter-spacing:-0.6px}
+.hd .hbtn{background:none;border:0;display:flex;padding:4px}
+.chipbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);
+  display:flex;gap:7px;overflow-x:auto;padding:8px 20px 12px;scrollbar-width:none}
+.chipbar::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;font-size:13px;font-weight:500;padding:7px 14px;border-radius:18px;
+  border:0.5px solid var(--line);background:var(--card);color:#4E5968}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:600}
+.gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:0.5px solid var(--line);
+  display:flex;justify-content:space-around;padding:8px 0 calc(10px + env(safe-area-inset-bottom));z-index:30}
+.gnb a{text-align:center;width:60px;padding-top:3px}
+.gnb .lb{font-size:10.5px;color:var(--gray);letter-spacing:-0.2px;margin-top:2px}
+.gnb a.on .lb{color:var(--ink);font-weight:700}
+.side{display:none}
+.rail{display:none}
+@media(min-width:1240px){
+  body{background:#F7F8FA}
+  .app{max-width:600px;border-left:0.5px solid #EEF0F2;border-right:0.5px solid #EEF0F2}
+  .gnb{display:none}
+  .side{display:flex;position:fixed;top:0;left:calc(50% - 560px);width:230px;height:100vh;flex-direction:column;padding:26px 14px;z-index:40}
+  .side .s-logo{display:flex;align-items:center;gap:8px;padding:2px 12px 24px}
+  .side .s-logo b{font-size:22px;font-weight:800;letter-spacing:-0.8px;color:#191F28}
+  .side .s-logo i{font-size:11px;color:#8B95A1;font-style:normal;padding-top:7px}
+  .side .ni{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:500;color:#4E5968;margin-bottom:2px}
+  .side .ni:hover{background:#F2F3F5}
+  .side .ni.on{color:#191F28;font-weight:700;background:#F2F3F5}
+  .side .s-write{margin-top:16px;background:#E0403C;color:#fff;border:0;border-radius:14px;padding:14px;font-size:15px;font-weight:700;letter-spacing:-0.3px}
+  .side .s-write:hover{background:#C9362F}
+  .side .s-ft{margin-top:auto;font-size:11px;color:#B0B8C1;padding:0 12px;line-height:1.7}
+  .rail{display:block;position:fixed;top:0;left:calc(50% + 320px);width:280px;height:100vh;overflow-y:auto;padding:26px 0;scrollbar-width:none}
+  .rail .rw{background:#fff;border:0.5px solid #EEF0F2;border-radius:16px;padding:16px 18px;margin-bottom:14px}
+  .rail h3{font-size:14.5px;font-weight:700;letter-spacing:-0.4px;margin-bottom:8px}
+  .rail .ri{display:flex;gap:9px;align-items:baseline;padding:7px 0;font-size:13px;color:#26303B}
+  .rail .ri b{color:#E0403C;font-size:12.5px;font-weight:800;width:12px;flex-shrink:0}
+  .rail .ri span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rail .rn{display:block;padding:7px 0;font-size:13px;color:#26303B;line-height:1.5}
+  .rail .rn i{display:block;font-style:normal;font-size:11px;color:#8B95A1;margin-top:2px}
+}
+
+.app{padding-bottom:0;display:flex;flex-direction:column;min-height:100vh}
+.lg{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px 20px}
+.lg .word{font-size:34px;font-weight:800;letter-spacing:-1.2px;margin-top:18px}
+.lg .copy{font-size:14px;color:var(--gray);margin-top:8px;letter-spacing:-0.3px}
+.btns{padding:0 28px calc(36px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px}
+.sb{display:flex;align-items:center;justify-content:center;gap:8px;border-radius:14px;
+  padding:15px;font-size:15px;font-weight:600;letter-spacing:-0.3px;border:0}
+.sb.kakao{background:#FEE500;color:#191919}
+.sb.naver{background:#03C75A;color:#fff}
+.sb.email{background:#fff;color:var(--ink);border:0.5px solid #D5D9DE}
+.lgft{text-align:center;font-size:13px;color:var(--gray);padding-bottom:36px}
+.lgft a{font-weight:600;color:#4E5968}
+@media(min-width:1240px){.app{max-width:420px;border:0.5px solid #EEF0F2;border-radius:24px;margin:60px auto;min-height:auto;padding-bottom:0}}
+</style>
+</head>
+<body>
+<div class="app">
+
+
+  <main class="lg">
+    <svg width="76" height="70" viewBox="0 0 36 34" aria-hidden="true"><path d="M4,4 a4,4 0 0 0 -4,4 v14 a4,4 0 0 0 4,4 h5 l3,6 l5,-6 h15 a4,4 0 0 0 4,-4 v-14 a4,4 0 0 0 -4,-4 z" fill="#E0403C"/><path d="M8,20 L14,13 L18,16 L26,7" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M22.5,6.5 L26.5,6.5 L26.5,10.5" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round"/></svg>
+    <div class="word">오재</div>
+    <div class="copy">매일 들르는 재테크 커뮤니티, 오늘의 재테크</div>
+  </main>
+  <div class="btns">
+    <button class="sb kakao">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12,3.5 C6.8,3.5 2.5,6.8 2.5,10.9 c0,2.6 1.7,4.9 4.3,6.2 L5.9,20.5 l3.9,-2.6 c0.7,0.1 1.4,0.2 2.2,0.2 c5.2,0 9.5,-3.3 9.5,-7.2 S17.2,3.5 12,3.5 Z" fill="#191919"/></svg>
+      카카오로 시작하기
+    </button>
+    <button class="sb naver"><b style="font-size:16px">N</b> 네이버로 시작하기</button>
+    <button class="sb email">이메일로 시작하기</button>
+    <div class="lgft" style="padding:8px 0 0">이미 계정이 있으신가요? <a href="#">로그인</a> · <a href="home.html">둘러보기</a></div>
+  </div>
+
+</div>
+<script>
+document.querySelectorAll('.chipbar .chip').forEach(function(c){
+  c.addEventListener('click',function(){
+    document.querySelectorAll('.chipbar .chip').forEach(function(x){x.classList.remove('on')});
+    c.classList.add('on');
+  });
+});
+</script>
+</body>
+</html>

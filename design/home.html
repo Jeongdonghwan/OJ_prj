@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>오재 — 오늘의 재테크</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+:root{
+  --red:#E0403C; --red-deep:#A32D2D; --red-tint:#FCEBEB;
+  --ink:#191F28; --gray:#8B95A1; --gray-light:#B0B8C1;
+  --bg:#FFFFFF; --card:#FFFFFF; --line:#EEF0F2;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{font-family:Pretendard,-apple-system,sans-serif;background:#EDEEF0;color:var(--ink);letter-spacing:-0.2px}
+.app{max-width:420px;margin:0 auto;background:var(--bg);min-height:100vh;padding-bottom:88px;position:relative}
+a{color:inherit;text-decoration:none}
+
+/* 헤더 */
+.hd{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:space-between;padding:14px 20px 12px}
+.logo{display:flex;align-items:center;gap:7px}
+.logo .wordmark{font-size:22px;font-weight:800;letter-spacing:-0.8px}
+.logo .tag{font-size:11px;color:var(--gray);letter-spacing:0;margin-left:2px;padding-top:6px}
+.hd-icons{display:flex;gap:16px}
+.hd-icons button{background:none;border:0;padding:4px;cursor:pointer;display:flex}
+
+/* 카테고리 그리드 */
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 20px 22px}
+.cat{background:var(--card);border-radius:16px;padding:15px 6px 12px;text-align:center;
+  border:0.5px solid var(--line);transition:transform .1s;cursor:pointer}
+.cat:active{transform:scale(.96)}
+.cat .ic{width:46px;height:46px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center}
+.cat .nm{font-size:12.5px;font-weight:600;margin-top:7px;letter-spacing:-0.3px}
+
+/* 섹션 공통 */
+.sec{padding:0 20px;margin-bottom:26px}
+.sec-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.sec-hd h2{font-size:18px;font-weight:700;letter-spacing:-0.5px}
+.sec-hd .more{font-size:12.5px;color:var(--gray);font-weight:500}
+
+/* 전문가 칼럼 */
+.chips{display:flex;gap:7px;overflow-x:auto;margin-bottom:6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;font-size:12.5px;font-weight:500;padding:6px 13px;border-radius:18px;
+  border:0.5px solid var(--line);background:var(--card);color:#4E5968;cursor:pointer}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:600}
+.col-list{background:var(--card);border-radius:18px;border:0.5px solid var(--line);padding:2px 16px}
+.col-item{display:flex;gap:14px;align-items:center;padding:15px 0;border-bottom:0.5px solid var(--line)}
+.col-item:last-child{border-bottom:0}
+.col-item .tx{min-width:0;flex:1}
+.col-item .tt{font-size:14.5px;font-weight:600;letter-spacing:-0.4px;line-height:1.4}
+.col-item .ds{font-size:12.5px;color:var(--gray);margin-top:3px;line-height:1.5;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+.col-item .au{font-size:11.5px;color:var(--gray);margin-top:6px;display:flex;align-items:center;gap:3px}
+.col-item .th{width:64px;height:64px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* 인기글 */
+.hot{background:var(--card);border-radius:18px;border:0.5px solid var(--line);padding:6px 18px}
+.hot-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:0.5px solid var(--line)}
+.hot-item:last-child{border-bottom:0}
+.hot-item .rk{font-size:14px;font-weight:800;color:var(--red);width:14px;text-align:center;flex-shrink:0}
+.hot-item .tt{font-size:14px;font-weight:500;letter-spacing:-0.3px;min-width:0;flex:1;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hot-item .cm{font-size:12px;color:var(--red);font-weight:600;flex-shrink:0}
+
+/* 뉴스 */
+.news-item{display:flex;gap:13px;align-items:center;padding:13px 0;border-bottom:0.5px solid var(--line)}
+.news-item:last-child{border-bottom:0}
+.news-item .th{width:74px;height:54px;border-radius:10px;flex-shrink:0;overflow:hidden;
+  display:flex;align-items:center;justify-content:center}
+.news-item .tt{font-size:14px;font-weight:500;line-height:1.45;letter-spacing:-0.3px;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.news-item .mt{font-size:11.5px;color:var(--gray);margin-top:4px}
+.news-wrap{background:var(--card);border-radius:18px;border:0.5px solid var(--line);padding:2px 16px}
+
+/* GNB */
+.gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:0.5px solid var(--line);
+  display:flex;justify-content:space-around;padding:8px 0 calc(10px + env(safe-area-inset-bottom));z-index:30}
+.gnb a{text-align:center;width:60px;padding-top:3px}
+.gnb .lb{font-size:10.5px;color:var(--gray);letter-spacing:-0.2px;margin-top:2px}
+.gnb a.on .lb{color:var(--ink);font-weight:700}
+
+.side{display:none}
+.rail{display:none}
+@media(min-width:1240px){
+  body{background:#F7F8FA}
+  .app{max-width:600px;border-left:0.5px solid #EEF0F2;border-right:0.5px solid #EEF0F2}
+  .gnb{display:none}
+  .fab{display:none}
+  .side{display:flex;position:fixed;top:0;left:calc(50% - 560px);width:230px;height:100vh;flex-direction:column;padding:26px 14px;z-index:40}
+  .side .s-logo{display:flex;align-items:center;gap:8px;padding:2px 12px 24px}
+  .side .s-logo b{font-size:22px;font-weight:800;letter-spacing:-0.8px;color:#191F28}
+  .side .s-logo i{font-size:11px;color:#8B95A1;font-style:normal;padding-top:7px}
+  .side .ni{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:500;color:#4E5968;margin-bottom:2px}
+  .side .ni:hover{background:#F2F3F5}
+  .side .ni.on{color:#191F28;font-weight:700;background:#F2F3F5}
+  .side .s-write{margin-top:16px;background:#E0403C;color:#fff;border:0;border-radius:14px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:-0.3px}
+  .side .s-write:hover{background:#C9362F}
+  .side .s-ft{margin-top:auto;font-size:11px;color:#B0B8C1;padding:0 12px;line-height:1.7}
+  .rail{display:block;position:fixed;top:0;left:calc(50% + 320px);width:280px;height:100vh;overflow-y:auto;padding:26px 0;scrollbar-width:none}
+  .rail .rw{background:#fff;border:0.5px solid #EEF0F2;border-radius:16px;padding:16px 18px;margin-bottom:14px}
+  .rail h3{font-size:14.5px;font-weight:700;letter-spacing:-0.4px;margin-bottom:8px}
+  .rail .ri{display:flex;gap:9px;align-items:baseline;padding:7px 0;font-size:13px;color:#26303B}
+  .rail .ri b{color:#E0403C;font-size:12.5px;font-weight:800;width:12px;flex-shrink:0}
+  .rail .ri span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rail .rn{display:block;padding:7px 0;font-size:13px;color:#26303B;line-height:1.5}
+  .rail .rn i{display:block;font-style:normal;font-size:11px;color:#8B95A1;margin-top:2px}
+}
+
+@media(min-width:1240px){
+  .hd{display:none}
+  .cats{grid-template-columns:repeat(6,1fr);padding-top:28px}
+}
+
+.qzbox .qzt{font-size:11.5px;font-weight:700;color:var(--gray);display:flex;justify-content:space-between;align-items:baseline}
+.qzbox .qzt em{font-style:normal;color:var(--red);font-weight:700}
+.qzbox .qzq{font-size:14px;font-weight:600;line-height:1.55;letter-spacing:-0.3px;margin:9px 0 11px;color:var(--ink)}
+.qzbox .qzb{display:block;width:100%;border:0.5px solid #E3E6EA;background:#F7F8FA;border-radius:12px;
+  padding:10px;font-size:13px;font-weight:600;color:#26303B;margin-bottom:6px;text-align:center;font-family:inherit;cursor:pointer}
+.qzbox.done .qzb{opacity:.5;cursor:default}
+.qzbox .qzb.ok{background:var(--ink);border-color:var(--ink);color:#fff;opacity:1}
+.qzbox .qzb.no{background:var(--red-tint);border-color:#F5C6C4;color:var(--red-deep);opacity:1}
+.qzbox .qza{display:none;font-size:12.5px;color:#4E5968;line-height:1.65;background:#F7F8FA;border-radius:10px;padding:11px 12px;margin-top:5px}
+.qzbox .qzp{font-size:11.5px;color:var(--gray-light);margin-top:9px}
+.qcard{margin:4px 20px 22px;background:var(--card);border:0.5px solid var(--line);border-radius:18px;padding:16px 18px}
+.adslot{border:1px dashed #D5D9DE;border-radius:14px;padding:20px 12px;text-align:center;
+  font-size:11px;color:#B0B8C1;letter-spacing:0}
+.adfeed{border:1px dashed #D5D9DE;border-radius:18px;padding:22px 17px;text-align:center;
+  font-size:11.5px;color:#B0B8C1;margin-bottom:10px;letter-spacing:0}
+.cal-i{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:12.5px;color:#26303B}
+.cal-i .d{flex-shrink:0;font-size:10.5px;font-weight:700;color:#4E5968;background:#F2F3F5;border-radius:7px;padding:3px 7px}
+.cal-i .d.hot{color:var(--red-deep);background:var(--red-tint)}
+
+.qzbox .qzlink{background:none;border:0;padding:0;font-size:12px;font-weight:600;color:var(--gray);
+  font-family:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.qzbox .qzhist{display:none;margin-top:10px;border-top:0.5px solid var(--line);padding-top:4px}
+.qzbox .qh{padding:9px 0;border-bottom:0.5px solid var(--line)}
+.qzbox .qh:last-child{border-bottom:0}
+.qzbox .qhq{font-size:12.5px;font-weight:600;line-height:1.5;color:var(--ink)}
+.qzbox .qhd{font-size:12px;color:var(--gray);line-height:1.55;margin-top:3px}
+.qzbox .qhd b{color:var(--red);margin-right:4px}
+
+@media(min-width:1240px){
+  .rail .rw:first-of-type{display:none}
+  .qcard{margin-top:26px}
+}
+
+.vtbox .vtt{font-size:11.5px;font-weight:700;color:var(--gray)}
+.vtbox .vtq{font-size:14px;font-weight:600;line-height:1.5;letter-spacing:-0.3px;margin:8px 0 11px;color:var(--ink)}
+.vtbox .vtrow{display:flex;gap:7px}
+.vtbox .vtb{flex:1;border:0;border-radius:12px;padding:11px 6px;font-size:13px;font-weight:700;color:#fff;font-family:inherit;cursor:pointer;letter-spacing:-0.3px}
+.vtbox .vtb.up{background:var(--red)}
+.vtbox .vtb.dn{background:#3572B0}
+.vtbox.done .vtb{opacity:.4;cursor:default}
+.vtbox.done .vtb.picked{opacity:1}
+.vtbox .vtr{display:none;margin-top:11px}
+.vtbox .vbar{display:flex;align-items:center;gap:8px;font-size:12px;color:#4E5968;margin-top:6px}
+.vtbox .vbar .l{width:44px;flex-shrink:0;font-weight:600}
+.vtbox .vbar .track{flex:1;height:8px;background:#F2F3F5;border-radius:5px;overflow:hidden}
+.vtbox .vbar .fill{height:100%;border-radius:5px}
+.vtbox .vbar .fill.up{background:var(--red)}
+.vtbox .vbar .fill.dn{background:#3572B0}
+.vtbox .vbar b{width:34px;text-align:right;font-weight:700;color:var(--ink)}
+.vtbox .vtn{font-size:11.5px;color:var(--gray-light);margin-top:9px}
+.pi{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;font-size:12.5px}
+.pi .nk{color:#26303B;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pi .nk i{font-style:normal;font-size:10.5px;color:var(--gray-light);margin-left:4px}
+.pi b{color:var(--red);font-weight:700;flex-shrink:0}
+.pi b.mn{color:#3572B0}
+.tag-p{display:inline-block;background:var(--red-tint);color:var(--red-deep);font-size:10.5px;font-weight:700;
+  border-radius:6px;padding:2px 6px;margin-right:6px;vertical-align:2px;letter-spacing:-0.2px}
+.tag-t{display:inline-block;background:#E9F1FA;color:#2A5A8C;font-size:10.5px;font-weight:700;
+  border-radius:6px;padding:2px 6px;margin-right:6px;vertical-align:2px;letter-spacing:-0.2px}
+.wprompt{display:none}
+@media(min-width:1240px){
+  .wprompt{display:flex;align-items:center;gap:11px;background:#F7F8FA;border:0.5px solid var(--line);
+    border-radius:16px;padding:13px 16px;margin:2px 14px 12px;cursor:pointer}
+  .wprompt .tx{font-size:14px;color:var(--gray)}
+}
+
+.adwing{display:none}
+@media(min-width:1460px){
+  .adwing{display:flex;position:fixed;top:80px;width:240px;height:600px;z-index:15;
+    border:1px dashed #D5D9DE;border-radius:16px;background:rgba(255,255,255,.6);
+    align-items:center;justify-content:center;text-align:center;
+    font-size:11.5px;color:#B0B8C1;line-height:1.8;letter-spacing:0}
+  .adwing.l{left:calc(50% - 830px)}
+  .adwing.r{left:calc(50% + 620px)}
+}
+
+.topnav{display:none}
+@media(min-width:1240px){
+  .side{display:none}
+  .topnav{display:block;position:fixed;top:0;left:0;right:0;height:60px;
+    background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:0.5px solid #EEF0F2;z-index:50}
+  .topnav .in{max-width:1160px;height:100%;margin:0 auto;display:flex;align-items:center;gap:28px;padding:0 20px}
+  .topnav .tlogo{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:800;letter-spacing:-0.7px;color:#191F28}
+  .topnav .tlogo i{font-style:normal;font-size:11px;font-weight:400;color:#8B95A1;padding-top:5px}
+  .topnav a.tl{font-size:15px;font-weight:500;color:#4E5968;letter-spacing:-0.3px}
+  .topnav a.tl:hover{color:#191F28}
+  .topnav a.tl.on{color:#191F28;font-weight:700}
+  .topnav .twrite{margin-left:auto;background:#E0403C;color:#fff;border:0;border-radius:12px;
+    padding:9px 20px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:-0.3px}
+  .topnav .twrite:hover{background:#C9362F}
+  .app{margin:0 auto 0 calc(50% - 450px);padding-top:60px}
+  .rail{left:calc(50% + 170px);top:60px}
+  .wr{left:calc(50% - 450px);transform:none;max-width:600px}
+  .adwing{top:130px}
+  .adwing.l{left:calc(50% - 720px)}
+  .adwing.r{left:calc(50% + 470px)}
+}
+
+@media(min-width:1240px){
+  .topnav .tr{margin-left:auto;display:flex;align-items:center;gap:16px}
+  .topnav .ticon{background:none;border:0;display:flex;padding:4px;cursor:pointer}
+  .topnav .twrite{margin-left:0}
+  .topnav .tavt{width:34px;height:34px;border-radius:50%;background:#E5F3EC;
+    display:flex;align-items:center;justify-content:center;border:2px solid transparent}
+  .topnav .tavt.on{border-color:#191F28}
+}
+</style>
+</head>
+<body>
+<nav class="topnav"><div class="in">
+  <a class="tlogo" href="home.html"><svg width="24" height="22" viewBox="0 0 36 34" aria-hidden="true"><path d="M4,4 a4,4 0 0 0 -4,4 v14 a4,4 0 0 0 4,4 h5 l3,6 l5,-6 h15 a4,4 0 0 0 4,-4 v-14 a4,4 0 0 0 -4,-4 z" fill="#E0403C"/><path d="M8,20 L14,13 L18,16 L26,7" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M22.5,6.5 L26.5,6.5 L26.5,10.5" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round"/></svg>오재<i>오늘의 재테크</i></a>
+  <a class="tl on" href="home.html">홈</a><a class="tl" href="community.html">커뮤니티</a><a class="tl" href="news.html">재테크뉴스</a><a class="tl" href="column.html">전문가칼럼</a>
+  <div class="tr">
+    <button class="ticon" aria-label="검색"><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7" fill="none" stroke="#191F28" stroke-width="1.8"/><path d="M15.6,15.6 L20.5,20.5" stroke="#191F28" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    <button class="ticon" aria-label="알림"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M6,10 a6,6 0 0 1 12,0 c0,4.2 1.6,5.6 2.2,6.3 H3.8 C4.4,15.6 6,14.2 6,10 Z" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.8,19.5 a2.3,2.3 0 0 0 4.4,0" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    <button class="twrite" onclick="location.href='write.html'">글쓰기</button>
+    <a class="tavt" href="my.html" aria-label="마이페이지"><svg viewBox="0 0 64 64" width="26" height="26"><ellipse cx="24" cy="14" rx="5.5" ry="12" fill="#FBF7F2"/><ellipse cx="24" cy="15" rx="2.6" ry="8" fill="#F2C4CF"/><ellipse cx="40" cy="14" rx="5.5" ry="12" fill="#FBF7F2"/><ellipse cx="40" cy="15" rx="2.6" ry="8" fill="#F2C4CF"/><circle cx="32" cy="39" r="19" fill="#FBF7F2"/><circle cx="25" cy="36" r="2.4" fill="#3A2E2A"/><circle cx="25.9" cy="35.2" r="0.8" fill="#fff"/><circle cx="39" cy="36" r="2.4" fill="#3A2E2A"/><circle cx="39.9" cy="35.2" r="0.8" fill="#fff"/><path d="M30.8,42 L33.2,42 L32,43.8 Z" fill="#E88AA0"/><circle cx="18" cy="43" r="3" fill="#F4C4D2" opacity=".9"/><circle cx="46" cy="43" r="3" fill="#F4C4D2" opacity=".9"/></svg></a>
+  </div>
+</div></nav>
+<div class="app">
+<div class="adwing l">AD<br>스카이스크래퍼 배너<br>240 × 600</div>
+<div class="adwing r">AD<br>스카이스크래퍼 배너<br>240 × 600</div>
+
+<aside class="side">
+    <div class="s-logo"><svg width="27" height="25" viewBox="0 0 36 34" aria-hidden="true"><path d="M4,4 a4,4 0 0 0 -4,4 v14 a4,4 0 0 0 4,4 h5 l3,6 l5,-6 h15 a4,4 0 0 0 4,-4 v-14 a4,4 0 0 0 -4,-4 z" fill="#E0403C"/><path d="M8,20 L14,13 L18,16 L26,7" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M22.5,6.5 L26.5,6.5 L26.5,10.5" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round"/></svg><b>오재</b><i>오늘의 재테크</i></div>
+    <a class="ni on" href="home.html"><svg width="23" height="23" viewBox="0 0 24 24"><path d="M3.5,10.2 L12,3.2 L20.5,10.2 V19 a1.6,1.6 0 0 1 -1.6,1.6 H14.6 V15 a2.6,2.6 0 0 0 -5.2,0 v5.6 H5.1 A1.6,1.6 0 0 1 3.5,19 Z" fill="#191F28"/></svg>홈</a><a class="ni" href="community.html"><svg width="23" height="23" viewBox="0 0 24 24"><path d="M4,5.5 h16 a1.5,1.5 0 0 1 1.5,1.5 v8 a1.5,1.5 0 0 1 -1.5,1.5 h-9.5 l-4,4 v-4 H4 A1.5,1.5 0 0 1 2.5,15 V7 A1.5,1.5 0 0 1 4,5.5 Z" fill="none" stroke="#B0B8C1" stroke-width="1.8" stroke-linejoin="round"/><circle cx="8.5" cy="11" r="1.1" fill="#B0B8C1"/><circle cx="12" cy="11" r="1.1" fill="#B0B8C1"/><circle cx="15.5" cy="11" r="1.1" fill="#B0B8C1"/></svg>커뮤니티</a><a class="ni" href="news.html"><svg width="23" height="23" viewBox="0 0 24 24"><rect x="3" y="4.5" width="14.5" height="15" rx="1.8" fill="none" stroke="#B0B8C1" stroke-width="1.8"/><path d="M17.5,9 h2 a1.4,1.4 0 0 1 1.4,1.4 v7 a2.1,2.1 0 0 1 -2.1,2.1 H17" fill="none" stroke="#B0B8C1" stroke-width="1.8"/><path d="M6.2,8.5 h8 M6.2,12 h8 M6.2,15.5 h5" stroke="#B0B8C1" stroke-width="1.8" stroke-linecap="round"/></svg>재테크뉴스</a><a class="ni" href="column.html"><svg width="23" height="23" viewBox="0 0 24 24"><path d="M5,3.5 h10.5 L20,8 V19 a1.6,1.6 0 0 1 -1.6,1.6 H5 A1.6,1.6 0 0 1 3.4,19 V5.1 A1.6,1.6 0 0 1 5,3.5 Z" fill="none" stroke="#B0B8C1" stroke-width="1.8" stroke-linejoin="round"/><path d="M15,3.8 V8.2 h4.5" fill="none" stroke="#B0B8C1" stroke-width="1.8" stroke-linejoin="round"/><path d="M7.2,12.5 h9 M7.2,16 h6" stroke="#B0B8C1" stroke-width="1.8" stroke-linecap="round"/></svg>전문가칼럼</a><a class="ni" href="my.html"><svg width="23" height="23" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="#B0B8C1" stroke-width="1.8"/><path d="M4.5,20.5 a7.5,6.5 0 0 1 15,0" fill="none" stroke="#B0B8C1" stroke-width="1.8" stroke-linecap="round"/></svg>마이페이지</a>
+    <button class="s-write">글쓰기</button>
+    <div class="s-ft">오늘의 재테크, 오재<br>ⓒ H.Co</div>
+  </aside>
+<aside class="rail">
+    <div class="rw">
+      <div class="qzbox">
+        <div class="qzt">데일리 재테크 퀴즈</div>
+        <div class="qzq">Q. 예금자보호 한도는 1인당 금융회사별 얼마까지일까요?</div>
+        <button class="qzb" onclick="qzPick(this,false)">5,000만원</button>
+        <button class="qzb" onclick="qzPick(this,true)">1억원</button>
+        <div class="qza" data-ans="1억원" data-exp="2025년 9월부터 예금자보호 한도가 5천만원에서 1억원으로 상향됐어요. 은행별로 각각 적용되니 분산 예치 전략도 달라집니다."></div>
+        <div class="qzp"><button class="qzlink" onclick="qzHist(this)">지난 퀴즈 보기</button></div>
+        <div class="qzhist">
+          <div class="qh"><div class="qhq">Q. 국내 상장 ETF의 매매차익에는 세금이 붙지 않는다?</div><div class="qhd"><b>X</b> 국내주식형만 비과세, 그 외엔 배당소득세 15.4%</div></div>
+          <div class="qh"><div class="qhq">Q. 청약통장 월 납입 인정액은 최대 25만원이다?</div><div class="qhd"><b>O</b> 2024년 11월부터 10만원 → 25만원으로 상향</div></div>
+          <div class="qh"><div class="qhq">Q. 연금저축 세액공제 한도는 연 600만원이다?</div><div class="qhd"><b>O</b> IRP 합산 시 최대 900만원까지 공제</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rw">
+      <div class="vtbox">
+        <div class="vtt">오늘의 투표</div>
+        <div class="vtq">이번 주 코스피, 어떻게 될까요?</div>
+        <div class="vtrow">
+          <button class="vtb up" onclick="vtPick(this,'up')">↑ 오른다</button>
+          <button class="vtb dn" onclick="vtPick(this,'dn')">떨어진다 ↓</button>
+        </div>
+        <div class="vtr">
+          <div class="vbar"><span class="l">오른다</span><div class="track"><div class="fill up" style="width:62%"></div></div><b>62%</b></div>
+          <div class="vbar"><span class="l">떨어진다</span><div class="track"><div class="fill dn" style="width:38%"></div></div><b>38%</b></div>
+          <div class="vtn">1,842명 참여 · 매일 자정 마감</div>
+        </div>
+      </div>
+    </div>
+    <div class="rw">
+      <h3>실시간 인기</h3>
+      <a class="ri" href="post.html"><b>1</b><span>전세 만기, 갱신 vs 매수 어떻게 하셨어요</span></a>
+      <a class="ri" href="post.html"><b>2</b><span>적금 풍차돌리기 1년 결산 인증합니다</span></a>
+      <a class="ri" href="post.html"><b>3</b><span>비트코인 적립식 매수, 지금 괜찮을까</span></a>
+      <a class="ri" href="post.html"><b>4</b><span>월급 300 사회초년생 포트폴리오 봐주세요</span></a>
+      <a class="ri" href="post.html"><b>5</b><span>청약통장 25만원으로 올려야 할까요</span></a>
+    </div>
+    <div class="rw">
+      <h3>실시간 수익 인증</h3>
+      <div class="pi"><span class="nk">티끌모아<i>예적금</i></span><b>+1,847,200원</b></div>
+      <div class="pi"><span class="nk">존버왕<i>코인</i></span><b>+12,405,000원</b></div>
+      <div class="pi"><span class="nk">배당덕후<i>주식</i></span><b>+3,214,800원</b></div>
+      <div class="pi"><span class="nk">단타는이제그만<i>주식</i></span><b class="mn">-2,108,500원</b></div>
+      <a class="rn" href="community.html" style="padding-top:9px;font-weight:600;color:#4E5968">수익인증 게시판 가기 →</a>
+    </div>
+    <div class="rw">
+      <h3>이번 주 재테크 캘린더</h3>
+      <div class="cal-i"><span class="d">7/10</span>힐스테이트 ○○ 청약 접수 시작</div>
+      <div class="cal-i"><span class="d">7/14</span>삼성전자 2분기 잠정실적 발표</div>
+      <div class="cal-i"><span class="d hot">7/15</span>청년도약계좌 7월 신청 마감</div>
+      <div class="cal-i"><span class="d">7/16</span>6월 고용동향 발표</div>
+      <div class="cal-i"><span class="d hot">7/29</span>미 FOMC 금리 결정</div>
+    </div>
+    <div class="adslot">AD · 배너 광고 영역 300×100<br>제휴 문의 ad@ojae.kr</div>
+    <div class="rw" style="margin-top:14px">
+      <h3>재테크 뉴스</h3>
+      <a class="rn" href="news.html">서울 아파트값 3주 연속 상승세<i>한국경제 · 2시간 전</i></a>
+      <a class="rn" href="news.html">연준, 7월 금리 동결 시사<i>연합뉴스 · 4시간 전</i></a>
+      <a class="rn" href="news.html">이더리움 현물 ETF 승인 임박설<i>블로터 · 6시간 전</i></a>
+    </div>
+  </aside>
+
+  <header class="hd">
+    <div class="logo">
+      <svg width="27" height="25" viewBox="0 0 36 34" aria-hidden="true">
+        <path d="M4,4 a4,4 0 0 0 -4,4 v14 a4,4 0 0 0 4,4 h5 l3,6 l5,-6 h15 a4,4 0 0 0 4,-4 v-14 a4,4 0 0 0 -4,-4 z" fill="#E0403C"/>
+        <path d="M8,20 L14,13 L18,16 L26,7" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M22.5,6.5 L26.5,6.5 L26.5,10.5" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <span class="wordmark">오재</span>
+      <span class="tag">오늘의 재테크</span>
+    </div>
+    <div class="hd-icons">
+      <button aria-label="검색">
+        <svg width="21" height="21" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7" fill="none" stroke="#191F28" stroke-width="1.8"/><path d="M15.6,15.6 L20.5,20.5" stroke="#191F28" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button aria-label="알림">
+        <svg width="21" height="21" viewBox="0 0 24 24"><path d="M6,10 a6,6 0 0 1 12,0 c0,4.2 1.6,5.6 2.2,6.3 H3.8 C4.4,15.6 6,14.2 6,10 Z" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.8,19.5 a2.3,2.3 0 0 0 4.4,0" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="qcard">
+    <div class="qzbox">
+        <div class="qzt">데일리 재테크 퀴즈</div>
+        <div class="qzq">Q. 예금자보호 한도는 1인당 금융회사별 얼마까지일까요?</div>
+        <button class="qzb" onclick="qzPick(this,false)">5,000만원</button>
+        <button class="qzb" onclick="qzPick(this,true)">1억원</button>
+        <div class="qza" data-ans="1억원" data-exp="2025년 9월부터 예금자보호 한도가 5천만원에서 1억원으로 상향됐어요. 은행별로 각각 적용되니 분산 예치 전략도 달라집니다."></div>
+        <div class="qzp"><button class="qzlink" onclick="qzHist(this)">지난 퀴즈 보기</button></div>
+        <div class="qzhist">
+          <div class="qh"><div class="qhq">Q. 국내 상장 ETF의 매매차익에는 세금이 붙지 않는다?</div><div class="qhd"><b>X</b> 국내주식형만 비과세, 그 외엔 배당소득세 15.4%</div></div>
+          <div class="qh"><div class="qhq">Q. 청약통장 월 납입 인정액은 최대 25만원이다?</div><div class="qhd"><b>O</b> 2024년 11월부터 10만원 → 25만원으로 상향</div></div>
+          <div class="qh"><div class="qhq">Q. 연금저축 세액공제 한도는 연 600만원이다?</div><div class="qhd"><b>O</b> IRP 합산 시 최대 900만원까지 공제</div></div>
+        </div>
+      </div>
+  </section>
+  
+
+
+  <nav class="cats">
+    <a class="cat" href="community.html">
+      <span class="ic" style="background:#FAECE7">
+        <svg viewBox="0 0 48 48" width="27" height="27"><rect x="7" y="11" width="14" height="29" rx="2.5" fill="#EDA184"/><rect x="10.5" y="16" width="3.6" height="3.6" rx="1" fill="#FBE9E0"/><rect x="10.5" y="23" width="3.6" height="3.6" rx="1" fill="#FBE9E0"/><rect x="18" y="19" width="23" height="21" rx="2.5" fill="#C9553B"/><rect x="23" y="24" width="4.2" height="4.2" rx="1.2" fill="#fff"/><rect x="30.5" y="24" width="4.2" height="4.2" rx="1.2" fill="#fff"/><rect x="23" y="31" width="4.2" height="4.2" rx="1.2" fill="#fff"/><rect x="30.5" y="31" width="4.2" height="4.2" rx="1.2" fill="#fff"/></svg>
+      </span>
+      <div class="nm">부동산</div>
+    </a>
+    <a class="cat" href="community.html">
+      <span class="ic" style="background:#FCEBEB">
+        <svg viewBox="0 0 48 48" width="27" height="27"><rect x="8" y="27" width="7" height="13" rx="2.8" fill="#F2A5A2"/><rect x="20" y="21" width="7" height="19" rx="2.8" fill="#F2A5A2"/><rect x="32" y="14" width="7" height="26" rx="2.8" fill="#F2A5A2"/><path d="M8,21 L19,13 L26,17 L37,8" fill="none" stroke="#D0433F" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M30,7 L38,7 L38,15" fill="none" stroke="#D0433F" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <div class="nm">주식</div>
+    </a>
+    <a class="cat" href="community.html">
+      <span class="ic" style="background:#FAEEDA">
+        <svg viewBox="0 0 48 48" width="27" height="27"><circle cx="18" cy="27" r="13" fill="#F0C05E"/><circle cx="29" cy="22" r="13.5" fill="#E8A93E"/><circle cx="29" cy="22" r="9.6" fill="none" stroke="#D18A19" stroke-width="2"/><text x="29" y="27.2" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13.5" font-weight="800" fill="#FFFFFF">₩</text></svg>
+      </span>
+      <div class="nm">코인</div>
+    </a>
+    <a class="cat" href="community.html">
+      <span class="ic" style="background:#E9F1FA">
+        <svg viewBox="0 0 48 48" width="27" height="27"><path d="M21,12 A14,14 0 1 0 35,26 L21,26 Z" fill="#7FA9D9"/><path d="M26,7 A14,14 0 0 1 40,21 L26,21 Z" fill="#3572B0"/><circle cx="17" cy="30" r="2.2" fill="#EAF2FB"/></svg>
+      </span>
+      <div class="nm">펀드·ETF</div>
+    </a>
+    <a class="cat" href="community.html">
+      <span class="ic" style="background:#E5F3EC">
+        <svg viewBox="0 0 48 48" width="27" height="27"><circle cx="24.5" cy="10.5" r="4.6" fill="#F0B94A"/><path d="M22.6,10.5 h3.8" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="24" cy="29" rx="16" ry="12.3" fill="#46A37D"/><path d="M33,20 Q36,14 40,16.5 Q39.5,21 36,22.5 Z" fill="#2F7D5E"/><rect x="20.5" y="17.5" width="8" height="2.6" rx="1.3" fill="#1F5C44"/><ellipse cx="9.5" cy="29.5" rx="4.4" ry="5.2" fill="#7FC4A4"/><circle cx="8.2" cy="27.8" r="1.1" fill="#1F5C44"/><circle cx="8.2" cy="31.2" r="1.1" fill="#1F5C44"/><circle cx="17" cy="24.5" r="1.9" fill="#1F3A2E"/><rect x="15" y="39" width="4.6" height="3.6" rx="1.6" fill="#2F7D5E"/><rect x="28.5" y="39" width="4.6" height="3.6" rx="1.6" fill="#2F7D5E"/></svg>
+      </span>
+      <div class="nm">예적금·절약</div>
+    </a>
+    <a class="cat" href="community.html">
+      <span class="ic" style="background:#EDECFA">
+        <svg viewBox="0 0 48 48" width="27" height="27"><path d="M13,8 h19 a7,7 0 0 1 7,7 v5 a7,7 0 0 1 -7,7 h-2 v0 a7,7 0 0 1 -7,-7 v-5 a7,7 0 0 0 -7,-7 z" fill="#B9B4E8"/><path d="M14,17 h18 a6.5,6.5 0 0 1 6.5,6.5 v4.5 a6.5,6.5 0 0 1 -6.5,6.5 H23 l-6.5,6 v-6 h-2.5 A6.5,6.5 0 0 1 7.5,28 v-4.5 A6.5,6.5 0 0 1 14,17 Z" fill="#6A63C9"/><circle cx="17.5" cy="25.8" r="2" fill="#fff"/><circle cx="23.5" cy="25.8" r="2" fill="#fff"/><circle cx="29.5" cy="25.8" r="2" fill="#fff"/></svg>
+      </span>
+      <div class="nm">자유수다</div>
+    </a>
+  </nav>
+
+  
+
+
+  <section class="sec">
+    <div class="sec-hd">
+      <h2>지금 뜨는 글</h2>
+      <a class="more" href="community.html">전체보기</a>
+    </div>
+    <div class="hot">
+      <a class="hot-item" href="post.html"><span class="rk">1</span><span class="tt">전세 만기, 갱신 vs 매수 어떻게 하셨어요</span><span class="cm">28</span></a>
+      <a class="hot-item" href="post.html"><span class="rk">2</span><span class="tt">적금 풍차돌리기 1년 결산 인증합니다</span><span class="cm">61</span></a>
+      <a class="hot-item" href="post.html"><span class="rk">3</span><span class="tt">비트코인 적립식 매수, 지금이라도 괜찮을까</span><span class="cm">38</span></a>
+      <a class="hot-item" href="post.html"><span class="rk">4</span><span class="tt">월급 300 사회초년생 포트폴리오 봐주세요</span><span class="cm">45</span></a>
+      <a class="hot-item" href="post.html"><span class="rk">5</span><span class="tt">청약통장 25만원으로 올려야 할까요</span><span class="cm">19</span></a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-hd">
+      <h2>전문가 칼럼</h2>
+      <a class="more" href="#">전체보기</a>
+    </div>
+    <div class="chips">
+      <button class="chip on">전체</button>
+      <button class="chip">절세 가이드</button>
+      <button class="chip">내집마련</button>
+      <button class="chip">연금·노후</button>
+      <button class="chip">초보 투자</button>
+    </div>
+    <div class="col-list">
+      <a class="col-item" href="post.html">
+        <div class="tx">
+          <div class="tt">ISA 계좌 만기, 전환 전략 3가지</div>
+          <div class="ds">연장·해지·재가입 케이스별 세금 차이 총정리</div>
+          <div class="au">박PB
+            <svg width="13" height="13" viewBox="0 0 24 24" aria-label="인증 전문가"><path d="M12,2 L14.6,4.2 L18,4 L18.8,7.3 L21.7,9.1 L20.3,12 L21.7,14.9 L18.8,16.7 L18,20 L14.6,19.8 L12,22 L9.4,19.8 L6,20 L5.2,16.7 L2.3,14.9 L3.7,12 L2.3,9.1 L5.2,7.3 L6,4 L9.4,4.2 Z" fill="#E0403C"/><path d="M8.5,12.2 L11,14.6 L15.5,9.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            자산관리사
+          </div>
+        </div>
+        <div class="th" style="background:#EDECFA">
+          <svg width="30" height="30" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2" fill="none" stroke="#5A54B8" stroke-width="1.6"/><path d="M8,8 h8 M8,11.5 h8 M8,15 h4.5" stroke="#5A54B8" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+      </a>
+      <a class="col-item" href="post.html">
+        <div class="tx">
+          <div class="tt">청약 가점 계산, 헷갈리는 5가지</div>
+          <div class="ds">무주택 기간 산정부터 부양가족 기준까지</div>
+          <div class="au">이중개사
+            <svg width="13" height="13" viewBox="0 0 24 24" aria-label="인증 전문가"><path d="M12,2 L14.6,4.2 L18,4 L18.8,7.3 L21.7,9.1 L20.3,12 L21.7,14.9 L18.8,16.7 L18,20 L14.6,19.8 L12,22 L9.4,19.8 L6,20 L5.2,16.7 L2.3,14.9 L3.7,12 L2.3,9.1 L5.2,7.3 L6,4 L9.4,4.2 Z" fill="#E0403C"/><path d="M8.5,12.2 L11,14.6 L15.5,9.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            공인중개사
+          </div>
+        </div>
+        <div class="th" style="background:#FAECE7">
+          <svg width="30" height="30" viewBox="0 0 24 24"><path d="M4,11 L12,4.5 L20,11 V19 a1.4,1.4 0 0 1 -1.4,1.4 H5.4 A1.4,1.4 0 0 1 4,19 Z" fill="none" stroke="#B45333" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.2,14.5 L11.4,16.6 L15,12.6" fill="none" stroke="#B45333" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+      <a class="col-item" href="post.html">
+        <div class="tx">
+          <div class="tt">연말정산, 지금부터 준비할 3가지</div>
+          <div class="ds">7월에 세팅하면 내년 2월이 편해집니다</div>
+          <div class="au">김세무
+            <svg width="13" height="13" viewBox="0 0 24 24" aria-label="인증 전문가"><path d="M12,2 L14.6,4.2 L18,4 L18.8,7.3 L21.7,9.1 L20.3,12 L21.7,14.9 L18.8,16.7 L18,20 L14.6,19.8 L12,22 L9.4,19.8 L6,20 L5.2,16.7 L2.3,14.9 L3.7,12 L2.3,9.1 L5.2,7.3 L6,4 L9.4,4.2 Z" fill="#E0403C"/><path d="M8.5,12.2 L11,14.6 L15.5,9.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            세무사
+          </div>
+        </div>
+        <div class="th" style="background:#E5F3EC">
+          <svg width="30" height="30" viewBox="0 0 24 24"><rect x="4.5" y="3.5" width="15" height="17" rx="2" fill="none" stroke="#1E7A5A" stroke-width="1.6"/><path d="M8,7.5 h8" stroke="#1E7A5A" stroke-width="1.6" stroke-linecap="round"/><path d="M8,11 h2 M8,14 h2 M8,17 h2 M12,11 h2 M12,14 h2 M12,17 h2" stroke="#1E7A5A" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-hd">
+      <h2>재테크 뉴스</h2>
+      <a class="more" href="#">전체보기</a>
+    </div>
+    <div class="news-wrap">
+      <a class="news-item" href="#">
+        <div class="th" style="background:#EEF0F2">
+          <svg width="26" height="26" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2" fill="none" stroke="#8B95A1" stroke-width="1.5"/><circle cx="9" cy="10.5" r="1.8" fill="none" stroke="#8B95A1" stroke-width="1.5"/><path d="M4.5,17 L9.5,13 L12.5,15.5 L16.5,11.5 L20,15" fill="none" stroke="#8B95A1" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="tt">서울 아파트값 3주 연속 상승… 강남권 신고가 잇따라</div>
+          <div class="mt">한국경제 · 2시간 전 · 댓글 14</div>
+        </div>
+      </a>
+      <a class="news-item" href="#">
+        <div class="th" style="background:#EEF0F2">
+          <svg width="26" height="26" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2" fill="none" stroke="#8B95A1" stroke-width="1.5"/><circle cx="9" cy="10.5" r="1.8" fill="none" stroke="#8B95A1" stroke-width="1.5"/><path d="M4.5,17 L9.5,13 L12.5,15.5 L16.5,11.5 L20,15" fill="none" stroke="#8B95A1" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="tt">연준, 7월 금리 동결 시사… 시장은 9월 인하에 무게</div>
+          <div class="mt">연합뉴스 · 4시간 전 · 댓글 8</div>
+        </div>
+      </a>
+      <a class="news-item" href="#">
+        <div class="th" style="background:#EEF0F2">
+          <svg width="26" height="26" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2" fill="none" stroke="#8B95A1" stroke-width="1.5"/><circle cx="9" cy="10.5" r="1.8" fill="none" stroke="#8B95A1" stroke-width="1.5"/><path d="M4.5,17 L9.5,13 L12.5,15.5 L16.5,11.5 L20,15" fill="none" stroke="#8B95A1" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="tt">이더리움 현물 ETF 승인 임박설에 코인 시장 들썩</div>
+          <div class="mt">블로터 · 6시간 전 · 댓글 22</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <nav class="gnb">
+    <a href="home.html" class="on">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M3.5,10.2 L12,3.2 L20.5,10.2 V19 a1.6,1.6 0 0 1 -1.6,1.6 H14.6 V15 a2.6,2.6 0 0 0 -5.2,0 v5.6 H5.1 A1.6,1.6 0 0 1 3.5,19 Z" fill="#191F28"/></svg>
+      <div class="lb">홈</div>
+    </a>
+    <a href="community.html">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M4,5.5 h16 a1.5,1.5 0 0 1 1.5,1.5 v8 a1.5,1.5 0 0 1 -1.5,1.5 h-9.5 l-4,4 v-4 H4 A1.5,1.5 0 0 1 2.5,15 V7 A1.5,1.5 0 0 1 4,5.5 Z" fill="none" stroke="#B0B8C1" stroke-width="1.8" stroke-linejoin="round"/><circle cx="8.5" cy="11" r="1.1" fill="#B0B8C1"/><circle cx="12" cy="11" r="1.1" fill="#B0B8C1"/><circle cx="15.5" cy="11" r="1.1" fill="#B0B8C1"/></svg>
+      <div class="lb">커뮤니티</div>
+    </a>
+    <a href="news.html">
+      <svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="4.5" width="14.5" height="15" rx="1.8" fill="none" stroke="#B0B8C1" stroke-width="1.8"/><path d="M17.5,9 h2 a1.4,1.4 0 0 1 1.4,1.4 v7 a2.1,2.1 0 0 1 -2.1,2.1 H17" fill="none" stroke="#B0B8C1" stroke-width="1.8"/><path d="M6.2,8.5 h8 M6.2,12 h8 M6.2,15.5 h5" stroke="#B0B8C1" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="lb">뉴스</div>
+    </a>
+    <a href="column.html">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M5,3.5 h10.5 L20,8 V19 a1.6,1.6 0 0 1 -1.6,1.6 H5 A1.6,1.6 0 0 1 3.4,19 V5.1 A1.6,1.6 0 0 1 5,3.5 Z" fill="none" stroke="#B0B8C1" stroke-width="1.8" stroke-linejoin="round"/><path d="M15,3.8 V8.2 h4.5" fill="none" stroke="#B0B8C1" stroke-width="1.8" stroke-linejoin="round"/><path d="M7.2,12.5 h9 M7.2,16 h6" stroke="#B0B8C1" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="lb">칼럼</div>
+    </a>
+    <a href="my.html">
+      <svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="#B0B8C1" stroke-width="1.8"/><path d="M4.5,20.5 a7.5,6.5 0 0 1 15,0" fill="none" stroke="#B0B8C1" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="lb">마이</div>
+    </a>
+  </nav>
+
+</div>
+<script>
+function qzPick(btn, ok){
+  var w = btn.closest('.qzbox');
+  if(w.classList.contains('done')) return;
+  w.classList.add('done');
+  btn.classList.add(ok ? 'ok' : 'no');
+  var a = w.querySelector('.qza');
+  a.style.display = 'block';
+  a.innerHTML = '<b>' + (ok ? '정답! ' : '아쉬워요. ') + '정답은 ' + a.dataset.ans + '</b><br>' + a.dataset.exp;
+}
+function qzHist(btn){
+  var h = btn.closest('.qzbox').querySelector('.qzhist');
+  var open = h.style.display === 'block';
+  h.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '지난 퀴즈 보기' : '지난 퀴즈 접기';
+}
+</script>
+<script>
+function vtPick(btn, side){
+  var w = btn.closest('.vtbox');
+  if(w.classList.contains('done')) return;
+  w.classList.add('done');
+  btn.classList.add('picked');
+  w.querySelector('.vtr').style.display = 'block';
+}
+</script>
+</body>
+</html>
