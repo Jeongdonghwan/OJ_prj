@@ -54,19 +54,20 @@ def user_factory(app):
         n = next(_nick_seq)
         nickname = nickname or f"유저{n}"
         engine = db_engine.get_engine(app)
+        values = dict(
+            email=email or f"u{n}_{nickname}@test.local",
+            oauth_provider=provider,
+            nickname=nickname,
+            avatar_no=(n % 12) + 1,
+            password_hash=password_hash,
+            is_verified=is_verified,
+            is_admin=is_admin,
+            points=points,
+            status="active",
+        )
+        values.update(kw)
         with engine.begin() as conn:
-            res = conn.execute(schema.users.insert().values(
-                email=email or f"u{n}_{nickname}@test.local",
-                oauth_provider=provider,
-                nickname=nickname,
-                avatar_no=(n % 12) + 1,
-                password_hash=password_hash,
-                is_verified=is_verified,
-                is_admin=is_admin,
-                points=points,
-                status="active",
-                **kw,
-            ))
+            res = conn.execute(schema.users.insert().values(**values))
             uid = res.inserted_primary_key[0]
             row = conn.execute(sa.select(schema.users).where(schema.users.c.id == uid)).mappings().one()
         return dict(row)
