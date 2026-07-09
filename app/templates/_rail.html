@@ -17,7 +17,7 @@
     <div class="rw">
       <h3>실시간 수익 인증</h3>
       {% for p in rail_profit %}
-      <div class="pi"><span class="nk">{{ p.nickname }}<i>{{ p.category }}</i></span><b{% if p.amount < 0 %} class="mn"{% endif %}>{{ '%+,d'|format(p.amount) }}원</b></div>
+      <div class="pi"><span class="nk">{{ p.nickname }}<i>{{ p.category }}</i></span><b{% if p.amount < 0 %} class="mn"{% endif %}>{{ p.amount|signed_comma }}원</b></div>
       {% endfor %}
       <a class="rn" href="{{ url_for('community.index', sort='profit') }}" style="padding-top:9px;font-weight:600;color:#4E5968">수익인증 게시판 가기 →</a>
     </div>

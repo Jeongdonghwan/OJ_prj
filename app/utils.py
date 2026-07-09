@@ -74,9 +74,17 @@ def comma(n):
     return f"{int(n):,}"
 
 
+def signed_comma(n):
+    """+1,847,200 / -2,108,500 형태 (수익 인증 위젯)."""
+    n = int(n or 0)
+    sign = "+" if n >= 0 else "-"
+    return f"{sign}{abs(n):,}"
+
+
 def register_template_helpers(app):
     app.jinja_env.filters["time_ago"] = time_ago
     app.jinja_env.filters["comma"] = comma
+    app.jinja_env.filters["signed_comma"] = signed_comma
     app.jinja_env.globals["avatar_url"] = avatar_url
     app.jinja_env.globals["avatar_bg"] = avatar_bg
     app.jinja_env.globals["cat_meta_attr"] = cat_meta_attr

@@ -68,6 +68,18 @@ def test_profit_board_cache(app, db, user_factory, post_factory):
     assert amounts["단타그만"] == -2108500
 
 
+def test_profit_rail_renders_signed_amounts(app, client, user_factory, post_factory):
+    """레일 수익 위젯: +/− 부호와 천단위 콤마 렌더링 (회귀: %+,d 포맷 버그)."""
+    u1, u2 = user_factory("수익왕"), user_factory("손실러")
+    post_factory(u1, category="stock", post_type="profit", title="a", profit_amount=1847200)
+    post_factory(u2, category="coin", post_type="profit", title="b", profit_amount=-2108500)
+    hot_posts.run(db_engine.get_engine(app))
+    html = client.get("/").get_data(as_text=True)
+    assert "+1,847,200원" in html
+    assert "-2,108,500원" in html
+    assert 'class="mn"' in html  # 손실은 블루 클래스
+
+
 def test_home_empty_state_safe(client):
     """데이터가 하나도 없어도 홈은 200 + 섹션 미노출."""
     res = client.get("/")
