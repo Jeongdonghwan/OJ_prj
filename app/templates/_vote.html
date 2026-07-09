@@ -1,0 +1,15 @@
+{% if poll %}
+<div class="vtbox{% if poll.voted %} done{% endif %}" data-poll-id="{{ poll.id }}">
+        <div class="vtt">오늘의 투표</div>
+        <div class="vtq">{{ poll.question }}</div>
+        <div class="vtrow">
+          <button class="vtb up{% if poll.voted and poll.my_side == 'up' %} picked{% endif %}" data-side="up">↑ {{ poll.option_up }}</button>
+          <button class="vtb dn{% if poll.voted and poll.my_side == 'down' %} picked{% endif %}" data-side="down">{{ poll.option_down }} ↓</button>
+        </div>
+        <div class="vtr"{% if poll.voted %} style="display:block"{% endif %}>
+          <div class="vbar"><span class="l">{{ poll.option_up }}</span><div class="track"><div class="fill up" style="width:{{ poll.up_pct }}%"></div></div><b>{{ poll.up_pct }}%</b></div>
+          <div class="vbar"><span class="l">{{ poll.option_down }}</span><div class="track"><div class="fill dn" style="width:{{ poll.down_pct }}%"></div></div><b>{{ poll.down_pct }}%</b></div>
+          <div class="vtn">{{ '{:,}'.format(poll.total) }}명 참여 · 매일 자정 마감</div>
+        </div>
+      </div>
+{% endif %}

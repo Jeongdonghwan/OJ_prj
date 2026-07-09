@@ -1,0 +1,42 @@
+<aside class="rail">
+    <div class="rw"{% if not rail_quiz %} style="display:none"{% endif %}>
+      {% if rail_quiz %}{% with quiz = rail_quiz %}{% include "_quiz.html" %}{% endwith %}{% endif %}
+    </div>
+    <div class="rw"{% if not rail_poll %} style="display:none"{% endif %}>
+      {% if rail_poll %}{% with poll = rail_poll %}{% include "_vote.html" %}{% endwith %}{% endif %}
+    </div>
+    {% if rail_hot %}
+    <div class="rw">
+      <h3>실시간 인기</h3>
+      {% for h in rail_hot %}
+      <a class="ri" href="{{ url_for('community.post_detail', post_id=h.id) }}"><b>{{ loop.index }}</b><span>{{ h.title }}</span></a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if rail_profit %}
+    <div class="rw">
+      <h3>실시간 수익 인증</h3>
+      {% for p in rail_profit %}
+      <div class="pi"><span class="nk">{{ p.nickname }}<i>{{ p.category }}</i></span><b{% if p.amount < 0 %} class="mn"{% endif %}>{{ '%+,d'|format(p.amount) }}원</b></div>
+      {% endfor %}
+      <a class="rn" href="{{ url_for('community.index', sort='profit') }}" style="padding-top:9px;font-weight:600;color:#4E5968">수익인증 게시판 가기 →</a>
+    </div>
+    {% endif %}
+    {% if rail_calendar %}
+    <div class="rw">
+      <h3>이번 주 재테크 캘린더</h3>
+      {% for ev in rail_calendar %}
+      <div class="cal-i"><span class="d{% if ev.is_hot %} hot{% endif %}">{{ ev.event_date.month }}/{{ ev.event_date.day }}</span>{{ ev.title }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="adslot">AD · 배너 광고 영역 300×100<br>제휴 문의 ad@ojae.kr</div>
+    {% if rail_news %}
+    <div class="rw" style="margin-top:14px">
+      <h3>재테크 뉴스</h3>
+      {% for n in rail_news %}
+      <a class="rn" href="{{ url_for('news.detail', news_id=n.id) }}">{{ n.title }}<i>{{ n.source }} · {{ n.time_ago }}</i></a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </aside>

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">{% endblock %}
+{% block content %}
+  <header class="hd">
+    <div class="logo">
+      <svg width="27" height="25" viewBox="0 0 36 34" aria-hidden="true">
+        <path d="M4,4 a4,4 0 0 0 -4,4 v14 a4,4 0 0 0 4,4 h5 l3,6 l5,-6 h15 a4,4 0 0 0 4,-4 v-14 a4,4 0 0 0 -4,-4 z" fill="#E0403C"/>
+        <path d="M8,20 L14,13 L18,16 L26,7" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M22.5,6.5 L26.5,6.5 L26.5,10.5" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <span class="wordmark">오재</span>
+      <span class="tag">오늘의 재테크</span>
+    </div>
+    <div class="hd-icons">
+      <button aria-label="검색" onclick="location.href='{{ url_for('main.search') }}'">
+        <svg width="21" height="21" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7" fill="none" stroke="#191F28" stroke-width="1.8"/><path d="M15.6,15.6 L20.5,20.5" stroke="#191F28" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button aria-label="알림" onclick="location.href='{{ url_for('main.notifications') }}'">
+        <svg width="21" height="21" viewBox="0 0 24 24"><path d="M6,10 a6,6 0 0 1 12,0 c0,4.2 1.6,5.6 2.2,6.3 H3.8 C4.4,15.6 6,14.2 6,10 Z" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.8,19.5 a2.3,2.3 0 0 0 4.4,0" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  {% if quiz %}
+  <section class="qcard">
+    {% include "_quiz.html" %}
+  </section>
+  {% endif %}
+
+  <nav class="cats">
+    <a class="cat" href="{{ url_for('community.index', cat='realestate') }}">
+      <span class="ic" style="background:#FAECE7">
+        <svg viewBox="0 0 48 48" width="27" height="27"><rect x="7" y="11" width="14" height="29" rx="2.5" fill="#EDA184"/><rect x="10.5" y="16" width="3.6" height="3.6" rx="1" fill="#FBE9E0"/><rect x="10.5" y="23" width="3.6" height="3.6" rx="1" fill="#FBE9E0"/><rect x="18" y="19" width="23" height="21" rx="2.5" fill="#C9553B"/><rect x="23" y="24" width="4.2" height="4.2" rx="1.2" fill="#fff"/><rect x="30.5" y="24" width="4.2" height="4.2" rx="1.2" fill="#fff"/><rect x="23" y="31" width="4.2" height="4.2" rx="1.2" fill="#fff"/><rect x="30.5" y="31" width="4.2" height="4.2" rx="1.2" fill="#fff"/></svg>
+      </span>
+      <div class="nm">부동산</div>
+    </a>
+    <a class="cat" href="{{ url_for('community.index', cat='stock') }}">
+      <span class="ic" style="background:#FCEBEB">
+        <svg viewBox="0 0 48 48" width="27" height="27"><rect x="8" y="27" width="7" height="13" rx="2.8" fill="#F2A5A2"/><rect x="20" y="21" width="7" height="19" rx="2.8" fill="#F2A5A2"/><rect x="32" y="14" width="7" height="26" rx="2.8" fill="#F2A5A2"/><path d="M8,21 L19,13 L26,17 L37,8" fill="none" stroke="#D0433F" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M30,7 L38,7 L38,15" fill="none" stroke="#D0433F" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <div class="nm">주식</div>
+    </a>
+    <a class="cat" href="{{ url_for('community.index', cat='coin') }}">
+      <span class="ic" style="background:#FAEEDA">
+        <svg viewBox="0 0 48 48" width="27" height="27"><circle cx="18" cy="27" r="13" fill="#F0C05E"/><circle cx="29" cy="22" r="13.5" fill="#E8A93E"/><circle cx="29" cy="22" r="9.6" fill="none" stroke="#D18A19" stroke-width="2"/><text x="29" y="27.2" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13.5" font-weight="800" fill="#FFFFFF">₩</text></svg>
+      </span>
+      <div class="nm">코인</div>
+    </a>
+    <a class="cat" href="{{ url_for('community.index', cat='fund') }}">
+      <span class="ic" style="background:#E9F1FA">
+        <svg viewBox="0 0 48 48" width="27" height="27"><path d="M21,12 A14,14 0 1 0 35,26 L21,26 Z" fill="#7FA9D9"/><path d="M26,7 A14,14 0 0 1 40,21 L26,21 Z" fill="#3572B0"/><circle cx="17" cy="30" r="2.2" fill="#EAF2FB"/></svg>
+      </span>
+      <div class="nm">펀드·ETF</div>
+    </a>
+    <a class="cat" href="{{ url_for('community.index', cat='saving') }}">
+      <span class="ic" style="background:#E5F3EC">
+        <svg viewBox="0 0 48 48" width="27" height="27"><circle cx="24.5" cy="10.5" r="4.6" fill="#F0B94A"/><path d="M22.6,10.5 h3.8" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="24" cy="29" rx="16" ry="12.3" fill="#46A37D"/><path d="M33,20 Q36,14 40,16.5 Q39.5,21 36,22.5 Z" fill="#2F7D5E"/><rect x="20.5" y="17.5" width="8" height="2.6" rx="1.3" fill="#1F5C44"/><ellipse cx="9.5" cy="29.5" rx="4.4" ry="5.2" fill="#7FC4A4"/><circle cx="8.2" cy="27.8" r="1.1" fill="#1F5C44"/><circle cx="8.2" cy="31.2" r="1.1" fill="#1F5C44"/><circle cx="17" cy="24.5" r="1.9" fill="#1F3A2E"/><rect x="15" y="39" width="4.6" height="3.6" rx="1.6" fill="#2F7D5E"/><rect x="28.5" y="39" width="4.6" height="3.6" rx="1.6" fill="#2F7D5E"/></svg>
+      </span>
+      <div class="nm">예적금·절약</div>
+    </a>
+    <a class="cat" href="{{ url_for('community.index', cat='free') }}">
+      <span class="ic" style="background:#EDECFA">
+        <svg viewBox="0 0 48 48" width="27" height="27"><path d="M13,8 h19 a7,7 0 0 1 7,7 v5 a7,7 0 0 1 -7,7 h-2 v0 a7,7 0 0 1 -7,-7 v-5 a7,7 0 0 0 -7,-7 z" fill="#B9B4E8"/><path d="M14,17 h18 a6.5,6.5 0 0 1 6.5,6.5 v4.5 a6.5,6.5 0 0 1 -6.5,6.5 H23 l-6.5,6 v-6 h-2.5 A6.5,6.5 0 0 1 7.5,28 v-4.5 A6.5,6.5 0 0 1 14,17 Z" fill="#6A63C9"/><circle cx="17.5" cy="25.8" r="2" fill="#fff"/><circle cx="23.5" cy="25.8" r="2" fill="#fff"/><circle cx="29.5" cy="25.8" r="2" fill="#fff"/></svg>
+      </span>
+      <div class="nm">자유수다</div>
+    </a>
+  </nav>
+
+  {% if hot_posts %}
+  <section class="sec">
+    <div class="sec-hd">
+      <h2>지금 뜨는 글</h2>
+      <a class="more" href="{{ url_for('community.index', sort='hot') }}">전체보기</a>
+    </div>
+    <div class="hot">
+      {% for h in hot_posts %}
+      <a class="hot-item" href="{{ url_for('community.post_detail', post_id=h.id) }}"><span class="rk">{{ loop.index }}</span><span class="tt">{{ h.title }}</span><span class="cm">{{ h.comment_count }}</span></a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if columns_latest %}
+  <section class="sec">
+    <div class="sec-hd">
+      <h2>전문가 칼럼</h2>
+      <a class="more" href="{{ url_for('columns.index') }}">전체보기</a>
+    </div>
+    <div class="chips">
+      <button class="chip on" data-href="{{ url_for('columns.index') }}">전체</button>
+      <button class="chip" data-href="{{ url_for('columns.index', tag='절세') }}">절세 가이드</button>
+      <button class="chip" data-href="{{ url_for('columns.index', tag='내집마련') }}">내집마련</button>
+      <button class="chip" data-href="{{ url_for('columns.index', tag='연금·노후') }}">연금·노후</button>
+      <button class="chip" data-href="{{ url_for('columns.index', tag='초보투자') }}">초보 투자</button>
+    </div>
+    <div class="col-list">
+      {% for c in columns_latest %}
+      <a class="col-item" href="{{ url_for('community.post_detail', post_id=c.id) }}">
+        <div class="tx">
+          <div class="tt">{{ c.title }}</div>
+          <div class="ds">{{ c.content }}</div>
+          <div class="au">{{ c.nickname }}
+            <svg width="13" height="13" viewBox="0 0 24 24" aria-label="인증 전문가"><path d="M12,2 L14.6,4.2 L18,4 L18.8,7.3 L21.7,9.1 L20.3,12 L21.7,14.9 L18.8,16.7 L18,20 L14.6,19.8 L12,22 L9.4,19.8 L6,20 L5.2,16.7 L2.3,14.9 L3.7,12 L2.3,9.1 L5.2,7.3 L6,4 L9.4,4.2 Z" fill="#E0403C"/><path d="M8.5,12.2 L11,14.6 L15.5,9.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            {{ c.job_title }}
+          </div>
+        </div>
+        <div class="th" style="background:#EDECFA">
+          {% if c.thumbnail %}<img src="{{ c.thumbnail }}" width="64" height="64" style="width:100%;height:100%;object-fit:cover;border-radius:13px" alt="">{% else %}<svg width="30" height="30" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2" fill="none" stroke="#5A54B8" stroke-width="1.6"/><path d="M8,8 h8 M8,11.5 h8 M8,15 h4.5" stroke="#5A54B8" stroke-width="1.6" stroke-linecap="round"/></svg>{% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if news_latest %}
+  <section class="sec">
+    <div class="sec-hd">
+      <h2>재테크 뉴스</h2>
+      <a class="more" href="{{ url_for('news.index') }}">전체보기</a>
+    </div>
+    <div class="news-wrap">
+      {% for n in news_latest %}
+      <a class="news-item" href="{{ n.url }}" target="_blank" rel="noopener">
+        <div class="th" style="background:#EEF0F2">
+          {% if n.thumbnail %}<img src="{{ n.thumbnail }}" width="74" height="54" style="width:100%;height:100%;object-fit:cover;border-radius:10px" alt="">{% else %}<svg width="26" height="26" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2" fill="none" stroke="#8B95A1" stroke-width="1.5"/><circle cx="9" cy="10.5" r="1.8" fill="none" stroke="#8B95A1" stroke-width="1.5"/><path d="M4.5,17 L9.5,13 L12.5,15.5 L16.5,11.5 L20,15" fill="none" stroke="#8B95A1" stroke-width="1.5" stroke-linejoin="round"/></svg>{% endif %}
+        </div>
+        <div>
+          <div class="tt">{{ n.title }}</div>
+          <div class="mt">{{ n.source }} · {{ n.published_at|time_ago }} · 댓글 {{ n.comment_count }}</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+{% endblock %}
+{% block page_js %}
+<script src="{{ url_for('static', filename='js/chips.js') }}"></script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vote.js') }}"></script>
+{% endblock %}

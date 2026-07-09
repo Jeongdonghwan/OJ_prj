@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>{% block title %}오재 — 오늘의 재테크{% endblock %}</title>
+{% block meta %}{% endblock %}
+<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+{% block page_css %}{% endblock %}
+</head>
+<body>
+{% block topnav %}{% include "_topnav.html" %}{% endblock %}
+<div class="app">
+{% block adwings %}{% include "_adwings.html" %}{% endblock %}
+{% block side %}{% include "_side.html" %}{% endblock %}
+{% block rail %}{% include "_rail.html" %}{% endblock %}
+{% block content %}{% endblock %}
+{% block gnb %}{% include "_gnb.html" %}{% endblock %}
+</div>
+{% block page_js %}{% endblock %}
+</body>
+</html>

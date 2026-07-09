@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}전문가 인증 신청 — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/write.css') }}">
+<style>
+.xform{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.xform label{font-size:12.5px;font-weight:600;color:var(--gray)}
+.xform input[type=text],.xform input[type=url]{border:0.5px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14.5px;font-family:inherit;outline:none}
+.xform input:focus{border-color:var(--ink)}
+.xform .err{font-size:12.5px;color:var(--red-deep)}
+.xstat{margin:16px 20px;background:#F7F8FA;border:0.5px solid var(--line);border-radius:14px;padding:14px 16px;font-size:13.5px;color:#4E5968}
+</style>{% endblock %}
+{% block topnav %}{% endblock %}
+{% block adwings %}{% endblock %}
+{% block side %}{% endblock %}
+{% block rail %}{% endblock %}
+{% block gnb %}{% endblock %}
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <header class="whd">
+    <button class="x" type="button" aria-label="닫기" onclick="history.back()">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M6,6 L18,18 M18,6 L6,18" stroke="#191F28" stroke-width="1.9" stroke-linecap="round"/></svg>
+    </button>
+    <span class="t">전문가 인증 신청</span>
+    <button class="submit" type="submit">신청</button>
+  </header>
+  {% if profile and profile.status == 'pending' %}
+  <div class="xstat">신청이 접수되어 심사 중입니다. 심사에는 영업일 기준 3일 정도 걸려요.</div>
+  {% elif profile and profile.status == 'approved' %}
+  <div class="xstat">이미 인증된 전문가입니다. 글쓰기에서 칼럼으로 발행할 수 있어요.</div>
+  {% elif profile and profile.status == 'rejected' %}
+  <div class="xstat">이전 신청이 반려되었습니다. 증빙을 보완해 다시 신청해주세요.</div>
+  {% endif %}
+  <main class="xform">
+    <label>직함 (필수, 예: 세무사·공인중개사·자산관리사)</label>
+    <input type="text" name="job_title" maxlength="30" required>
+    <label>소속 (선택)</label>
+    <input type="text" name="org" maxlength="50">
+    <label>증빙 파일 (필수 — 자격증·재직증명 등, jpg/png/webp/pdf)</label>
+    <input type="file" name="cert_file" accept=".jpg,.jpeg,.png,.webp,.pdf" required>
+    <label>외부 링크 (선택 — 블로그, 프로필 등)</label>
+    <input type="url" name="external_link">
+    {% if error %}<div class="err">{{ error }}</div>{% endif %}
+    <div class="wnote">제출한 증빙은 심사 목적으로만 사용되며 외부에 공개되지 않습니다.</div>
+  </main>
+  </form>
+{% endblock %}

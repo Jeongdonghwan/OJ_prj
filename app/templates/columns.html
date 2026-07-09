@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}전문가칼럼 — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/column.css') }}">{% endblock %}
+{% block content %}
+  <header class="hd">
+    <h1>전문가칼럼</h1>
+    <button class="hbtn" aria-label="검색" onclick="location.href='{{ url_for('main.search') }}'">
+      <svg width="21" height="21" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7" fill="none" stroke="#191F28" stroke-width="1.8"/><path d="M15.6,15.6 L20.5,20.5" stroke="#191F28" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+  </header>
+  <div class="chipbar">
+    <button class="chip{% if not tag %} on{% endif %}" data-href="{{ url_for('columns.index') }}">전체</button>
+    <button class="chip{% if tag == '절세' %} on{% endif %}" data-href="{{ url_for('columns.index', tag='절세') }}">절세 가이드</button>
+    <button class="chip{% if tag == '내집마련' %} on{% endif %}" data-href="{{ url_for('columns.index', tag='내집마련') }}">내집마련</button>
+    <button class="chip{% if tag == '연금·노후' %} on{% endif %}" data-href="{{ url_for('columns.index', tag='연금·노후') }}">연금·노후</button>
+    <button class="chip{% if tag == '초보투자' %} on{% endif %}" data-href="{{ url_for('columns.index', tag='초보투자') }}">초보 투자</button>
+  </div>
+  <main class="clist">
+      {% for c in columns %}
+      <a class="citem" href="{{ url_for('community.post_detail', post_id=c.id) }}">
+        <div class="tx">
+          <div class="tt">{{ c.title }}</div>
+          <div class="ds">{{ c.content }}</div>
+          <div class="au"><b>{{ c.nickname }}</b><svg width="14" height="14" viewBox="0 0 24 24" aria-label="인증 전문가"><path d="M12,2 L14.6,4.2 L18,4 L18.8,7.3 L21.7,9.1 L20.3,12 L21.7,14.9 L18.8,16.7 L18,20 L14.6,19.8 L12,22 L9.4,19.8 L6,20 L5.2,16.7 L2.3,14.9 L3.7,12 L2.3,9.1 L5.2,7.3 L6,4 L9.4,4.2 Z" fill="#E0403C"/><path d="M8.5,12.2 L11,14.6 L15.5,9.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ c.job_title }} · 조회 {{ c.view_count|comma }}</div>
+        </div>
+        <div class="th" style="background:#EDECFA">
+          {% if c.thumbnail %}<img src="{{ c.thumbnail }}" width="72" height="72" style="width:100%;height:100%;object-fit:cover;border-radius:13px" alt="">{% else %}<svg width="30" height="30" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2" fill="none" stroke="#5A54B8" stroke-width="1.6"/><path d="M8,8 h8 M8,11.5 h8 M8,15 h4.5" stroke="#5A54B8" stroke-width="1.6" stroke-linecap="round"/></svg>{% endif %}
+        </div>
+      </a>
+      {% endfor %}
+  </main>
+  <a class="cta" href="{{ url_for('columns.expert_apply') }}">
+    <div>
+      <div class="t1">전문가이신가요?</div>
+      <div class="t2">인증하고 칼럼으로 나를 알려보세요</div>
+    </div>
+    <span class="go">인증 신청 →</span>
+  </a>
+{% endblock %}
+{% block page_js %}
+<script src="{{ url_for('static', filename='js/chips.js') }}"></script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vote.js') }}"></script>
+{% endblock %}

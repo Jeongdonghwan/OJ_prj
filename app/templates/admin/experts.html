@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h2>전문가 인증 심사</h2>
+<table>
+  <tr><th>닉네임</th><th>직함</th><th>소속</th><th>증빙</th><th>링크</th><th>처리</th></tr>
+  {% for e in pending %}
+  <tr>
+    <td>{{ e.nickname }}</td>
+    <td>{{ e.job_title }}</td>
+    <td>{{ e.org or '-' }}</td>
+    <td><a href="{{ e.cert_file }}" target="_blank">보기</a></td>
+    <td>{% if e.external_link %}<a href="{{ e.external_link }}" target="_blank">링크</a>{% else %}-{% endif %}</td>
+    <td>
+      <form class="inline" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="user_id" value="{{ e.user_id }}">
+        <button class="primary" name="action" value="approve">승인</button>
+        <button name="action" value="reject">반려</button>
+      </form>
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="6">대기 중인 신청이 없습니다.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

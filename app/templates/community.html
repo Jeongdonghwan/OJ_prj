@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}커뮤니티 — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/community.css') }}">{% endblock %}
+{% block content %}
+  <header class="hd">
+    <h1>커뮤니티</h1>
+    <button aria-label="검색" onclick="location.href='{{ url_for('main.search') }}'">
+      <svg width="21" height="21" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7" fill="none" stroke="#191F28" stroke-width="1.8"/><path d="M15.6,15.6 L20.5,20.5" stroke="#191F28" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+  </header>
+
+  <div class="chipbar">
+    <button class="chip{% if not cat %} on{% endif %}" data-href="{{ url_for('community.index', sort=sort if sort != 'latest' else None) }}">전체</button>
+    {% for c in categories %}
+    <button class="chip{% if cat == c.slug %} on{% endif %}" data-href="{{ url_for('community.index', cat=c.slug, sort=sort if sort != 'latest' else None) }}">{{ c.name }}</button>
+    {% endfor %}
+  </div>
+
+  <div class="sortbar">
+    <button{% if sort == 'latest' %} class="on"{% endif %} data-href="{{ url_for('community.index', cat=cat) }}">최신순</button>
+    <button{% if sort == 'hot' %} class="on"{% endif %} data-href="{{ url_for('community.index', cat=cat, sort='hot') }}">인기순</button>
+    <button{% if sort == 'expert' %} class="on"{% endif %} data-href="{{ url_for('community.index', cat=cat, sort='expert') }}">전문가</button>
+    <button{% if sort == 'profit' %} class="on"{% endif %} data-href="{{ url_for('community.index', cat=cat, sort='profit') }}">수익인증</button>
+    <button{% if sort == 'trade' %} class="on"{% endif %} data-href="{{ url_for('community.index', cat=cat, sort='trade') }}">거래인증</button>
+  </div>
+
+  <main class="feed">
+
+    {% if poll %}
+    <div class="post" style="cursor:default">
+      {% include "_vote.html" %}
+    </div>
+    {% endif %}
+
+    <div class="wprompt" onclick="location.href='{{ url_for('community.write') }}'">
+      <span class="avt" style="width:34px;height:34px;background:{% if current_user.is_authenticated %}{{ avatar_bg(current_user) }}{% else %}#E5F3EC{% endif %}">
+        {% if current_user.is_authenticated %}<img src="{{ avatar_url(current_user) }}" width="26" height="26" alt="">{% else %}<svg viewBox="0 0 64 64" width="26" height="26"><ellipse cx="24" cy="14" rx="5.5" ry="12" fill="#FBF7F2"/><ellipse cx="40" cy="14" rx="5.5" ry="12" fill="#FBF7F2"/><circle cx="32" cy="39" r="19" fill="#FBF7F2"/><circle cx="25" cy="36" r="2.4" fill="#3A2E2A"/><circle cx="39" cy="36" r="2.4" fill="#3A2E2A"/><path d="M30.8,42 L33.2,42 L32,43.8 Z" fill="#E88AA0"/></svg>{% endif %}
+      </span>
+      <span class="tx">오늘은 어떤 재테크 이야기를 나누고 싶으신가요?</span>
+    </div>
+
+    <div id="feed-items">
+    {% for p in posts %}
+    {% include "_post_card.html" %}
+    {% endfor %}
+    </div>
+
+  </main>
+
+  <button class="fab" aria-label="글쓰기" onclick="location.href='{{ url_for('community.write') }}'">
+    <svg width="22" height="22" viewBox="0 0 24 24"><path d="M14.5,5.5 L18.5,9.5 L8.5,19.5 L4,20 L4.5,15.5 Z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linejoin="round"/><path d="M16.5,3.5 a1.9,1.9 0 0 1 4,4 l-1,1 L15.5,4.5 Z" fill="#fff"/></svg>
+  </button>
+{% endblock %}
+{% block page_js %}
+<script>window.FEED_NEXT_CURSOR = {{ (next_cursor|tojson) if next_cursor else 'null' }};
+window.FEED_QUERY = {{ {'cat': cat or '', 'sort': sort or 'latest'}|tojson }};</script>
+<script src="{{ url_for('static', filename='js/chips.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vote.js') }}"></script>
+<script src="{{ url_for('static', filename='js/feed.js') }}"></script>
+{% endblock %}

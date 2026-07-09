@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}로그인 — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">{% endblock %}
+{% block topnav %}{% endblock %}
+{% block adwings %}{% endblock %}
+{% block side %}{% endblock %}
+{% block rail %}{% endblock %}
+{% block gnb %}{% endblock %}
+{% block content %}
+  <main class="lg">
+    <svg width="76" height="70" viewBox="0 0 36 34" aria-hidden="true"><path d="M4,4 a4,4 0 0 0 -4,4 v14 a4,4 0 0 0 4,4 h5 l3,6 l5,-6 h15 a4,4 0 0 0 4,-4 v-14 a4,4 0 0 0 -4,-4 z" fill="#E0403C"/><path d="M8,20 L14,13 L18,16 L26,7" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M22.5,6.5 L26.5,6.5 L26.5,10.5" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round"/></svg>
+    <div class="word">오재</div>
+    <div class="copy">매일 들르는 재테크 커뮤니티, 오늘의 재테크</div>
+  </main>
+  <div class="btns">
+    <button class="sb kakao" onclick="location.href='{{ url_for('auth.kakao_start') }}'">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12,3.5 C6.8,3.5 2.5,6.8 2.5,10.9 c0,2.6 1.7,4.9 4.3,6.2 L5.9,20.5 l3.9,-2.6 c0.7,0.1 1.4,0.2 2.2,0.2 c5.2,0 9.5,-3.3 9.5,-7.2 S17.2,3.5 12,3.5 Z" fill="#191919"/></svg>
+      카카오로 시작하기
+    </button>
+    <button class="sb naver" onclick="alert('네이버 로그인은 준비 중입니다')"><b style="font-size:16px">N</b> 네이버로 시작하기</button>
+    <button class="sb email" onclick="location.href='{{ url_for('auth.email_signup') }}'">이메일로 시작하기</button>
+    <div class="lgft" style="padding:8px 0 0">이미 계정이 있으신가요? <a href="{{ url_for('auth.email_login') }}">로그인</a> · <a href="{{ url_for('main.home') }}">둘러보기</a></div>
+  </div>
+{% endblock %}

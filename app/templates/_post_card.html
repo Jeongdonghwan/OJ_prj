@@ -1,0 +1,26 @@
+<a class="post" href="{{ url_for('community.post_detail', post_id=p.id) }}">
+      <div class="p-hd">
+        <span class="avt" style="background:{{ avatar_bg(p) }}">
+          <img src="{{ avatar_url(p) }}" width="30" height="30" alt="">
+        </span>
+        <div>
+          <div class="p-nick">{{ p.nickname }}{% if p.is_verified %}
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-label="인증 전문가"><path d="M12,2 L14.6,4.2 L18,4 L18.8,7.3 L21.7,9.1 L20.3,12 L21.7,14.9 L18.8,16.7 L18,20 L14.6,19.8 L12,22 L9.4,19.8 L6,20 L5.2,16.7 L2.3,14.9 L3.7,12 L2.3,9.1 L5.2,7.3 L6,4 L9.4,4.2 Z" fill="#E0403C"/><path d="M8.5,12.2 L11,14.6 L15.5,9.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {% endif %}</div>
+          <div class="p-meta"><span{{ cat_meta_attr(p.cat_slug)|safe }}>{{ p.cat_name }}</span> · {{ p.created_at|time_ago }} · 조회 {{ p.view_count|comma }}</div>
+        </div>
+      </div>
+      <div class="p-bd">
+        <div class="p-tx">
+          <div class="p-tt">{% if p.post_type == 'profit' %}<span class="tag-p">수익인증</span>{% elif p.post_type == 'trade' %}<span class="tag-t">거래인증</span>{% elif p.post_type == 'question' %}<span class="tag-q">질문</span>{% endif %}{{ p.title }}</div>
+          <div class="p-ct">{{ p.content }}</div>
+        </div>
+        {% if p.thumbnail %}
+        <div class="p-th"><img src="{{ p.thumbnail }}" width="66" height="66" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        {% endif %}
+      </div>
+      <div class="p-act">
+        <button class="pill like{% if p.liked %} liked{% endif %}" data-post-id="{{ p.id }}"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M7,10.5 L10,3.5 a2.4,2.4 0 0 1 2.4,2.4 V9 h5.4 a2,2 0 0 1 2,2.3 l-1.1,6.4 a2,2 0 0 1 -2,1.7 H7 M7,10.5 H4 a1,1 0 0 0 -1,1 v6.9 a1,1 0 0 0 1,1 h3 z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>도움됐어요 <span class="lc">{{ p.like_count|comma }}</span></button>
+        <button class="pill" onclick="return false"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M4.5,5 h15 a1.8,1.8 0 0 1 1.8,1.8 v7.4 a1.8,1.8 0 0 1 -1.8,1.8 h-8.6 l-4.2,4 v-4 h-2.2 a1.8,1.8 0 0 1 -1.8,-1.8 v-7.4 a1.8,1.8 0 0 1 1.8,-1.8 z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>댓글 {{ p.comment_count|comma }}</button>
+      </div>
+    </a>

@@ -1,0 +1,14 @@
+<nav class="topnav"><div class="in">
+  <a class="tlogo" href="{{ url_for('main.home') }}"><svg width="24" height="22" viewBox="0 0 36 34" aria-hidden="true"><path d="M4,4 a4,4 0 0 0 -4,4 v14 a4,4 0 0 0 4,4 h5 l3,6 l5,-6 h15 a4,4 0 0 0 4,-4 v-14 a4,4 0 0 0 -4,-4 z" fill="#E0403C"/><path d="M8,20 L14,13 L18,16 L26,7" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M22.5,6.5 L26.5,6.5 L26.5,10.5" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round"/></svg>오재<i>오늘의 재테크</i></a>
+  <a class="tl{% if active == 'home' %} on{% endif %}" href="{{ url_for('main.home') }}">홈</a><a class="tl{% if active == 'community' %} on{% endif %}" href="{{ url_for('community.index') }}">커뮤니티</a><a class="tl{% if active == 'news' %} on{% endif %}" href="{{ url_for('news.index') }}">재테크뉴스</a><a class="tl{% if active == 'column' %} on{% endif %}" href="{{ url_for('columns.index') }}">전문가칼럼</a>
+  <div class="tr">
+    <button class="ticon" aria-label="검색" onclick="location.href='{{ url_for('main.search') }}'"><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7" fill="none" stroke="#191F28" stroke-width="1.8"/><path d="M15.6,15.6 L20.5,20.5" stroke="#191F28" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    <button class="ticon" aria-label="알림" onclick="location.href='{{ url_for('main.notifications') }}'"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M6,10 a6,6 0 0 1 12,0 c0,4.2 1.6,5.6 2.2,6.3 H3.8 C4.4,15.6 6,14.2 6,10 Z" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.8,19.5 a2.3,2.3 0 0 0 4.4,0" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    <button class="twrite" onclick="location.href='{{ url_for('community.write') }}'">글쓰기</button>
+    {% if current_user.is_authenticated %}
+    <a class="tavt{% if active == 'my' %} on{% endif %}" href="{{ url_for('my.index') }}" aria-label="마이페이지"><img src="{{ avatar_url(current_user) }}" width="26" height="26" alt=""></a>
+    {% else %}
+    <a class="tl" href="{{ url_for('auth.login') }}">로그인</a>
+    {% endif %}
+  </div>
+</div></nav>

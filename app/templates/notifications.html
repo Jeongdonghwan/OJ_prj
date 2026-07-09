@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}알림 — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/my.css') }}">
+<style>
+.noti{margin:6px 20px;background:var(--card);border:0.5px solid var(--line);border-radius:18px;padding:4px 18px}
+.noti .ni2{display:block;padding:14px 0;border-bottom:0.5px solid var(--line);color:inherit;text-decoration:none}
+.noti .ni2:last-child{border-bottom:0}
+.noti .ni2 .msg{font-size:14px;line-height:1.5}
+.noti .ni2.unread .msg{font-weight:600}
+.noti .ni2 .tm{font-size:11.5px;color:var(--gray);margin-top:3px}
+.noresult{padding:40px 20px;text-align:center;color:var(--gray);font-size:14px}
+</style>{% endblock %}
+{% block content %}
+  <header class="hd">
+    <h1>알림</h1>
+    <button class="hbtn" aria-label="닫기" onclick="history.back()">
+      <svg width="21" height="21" viewBox="0 0 24 24"><path d="M6,6 L18,18 M18,6 L6,18" stroke="#191F28" stroke-width="1.9" stroke-linecap="round"/></svg>
+    </button>
+  </header>
+  <div class="noti">
+    {% if not notifications %}
+    <div class="noresult">새 알림이 없습니다.</div>
+    {% endif %}
+    {% for n in notifications %}
+    <a class="ni2{% if not n.is_read %} unread{% endif %}" href="{{ n.link }}">
+      <div class="msg">{{ n.message }}</div>
+      <div class="tm">{{ n.created_at|time_ago }}</div>
+    </a>
+    {% endfor %}
+  </div>
+{% endblock %}

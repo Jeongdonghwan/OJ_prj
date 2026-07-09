@@ -1,0 +1,16 @@
+{% if quiz %}
+<div class="qzbox{% if quiz.attempted %} done{% endif %}" data-quiz-id="{{ quiz.id }}">
+        <div class="qzt">데일리 재테크 퀴즈</div>
+        <div class="qzq">Q. {{ quiz.question }}</div>
+        {% for choice in quiz.choices %}
+        <button class="qzb{% if quiz.attempted and quiz.my_choice == loop.index %}{% if quiz.is_correct %} ok{% else %} no{% endif %}{% endif %}" data-no="{{ loop.index }}">{{ choice }}</button>
+        {% endfor %}
+        <div class="qza" data-ans="{{ quiz.answer_text }}" data-exp="{{ quiz.explanation }}"{% if quiz.attempted %} style="display:block"{% endif %}>{% if quiz.attempted %}<b>{% if quiz.is_correct %}정답! {% else %}아쉬워요. {% endif %}정답은 {{ quiz.answer_text }}</b><br>{{ quiz.explanation }}{% endif %}</div>
+        <div class="qzp"><button class="qzlink" onclick="qzHist(this)">지난 퀴즈 보기</button></div>
+        <div class="qzhist">
+          {% for h in quiz.history %}
+          <div class="qh"><div class="qhq">Q. {{ h.question }}</div><div class="qhd"><b>{{ h.answer_text }}</b> {{ h.explanation }}</div></div>
+          {% endfor %}
+        </div>
+      </div>
+{% endif %}

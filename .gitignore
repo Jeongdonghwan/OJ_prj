@@ -8,3 +8,4 @@ app/static/uploads/*
 instance/
 *.log
 .DS_Store
+ojae_dev.db

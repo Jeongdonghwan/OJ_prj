@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}지난 재테크 퀴즈 모음 — 오재{% endblock %}
+{% block meta %}<meta name="description" content="매일 하나씩, 오재 데일리 재테크 퀴즈의 문제와 해설 아카이브."> {% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<style>
+.qarch{padding:0 20px}
+.qa-item{background:var(--card);border:0.5px solid var(--line);border-radius:16px;padding:16px 17px;margin-bottom:10px}
+.qa-item .dt{font-size:11.5px;font-weight:700;color:var(--gray);margin-bottom:6px}
+.qa-item .qq{font-size:14.5px;font-weight:600;line-height:1.5;letter-spacing:-0.3px}
+.qa-item .aa{font-size:13px;color:#4E5968;line-height:1.65;margin-top:8px;background:#F7F8FA;border-radius:10px;padding:10px 12px}
+.qa-item .aa b{color:var(--red-deep)}
+</style>{% endblock %}
+{% block content %}
+  <header class="hd">
+    <div class="logo"><span class="wordmark" style="font-size:19px">지난 재테크 퀴즈</span></div>
+    <div class="hd-icons">
+      <button aria-label="뒤로" onclick="history.back()">
+        <svg width="21" height="21" viewBox="0 0 24 24"><path d="M6,6 L18,18 M18,6 L6,18" stroke="#191F28" stroke-width="1.9" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+  <main class="qarch">
+    {% for q in quizzes %}
+    <div class="qa-item">
+      <div class="dt">{{ q.quiz_date }}</div>
+      <div class="qq">Q. {{ q.question }}</div>
+      <div class="aa"><b>정답: {{ q.answer_text }}</b><br>{{ q.explanation }}</div>
+    </div>
+    {% else %}
+    <div style="padding:40px 0;text-align:center;color:var(--gray);font-size:14px">아직 지난 퀴즈가 없어요.</div>
+    {% endfor %}
+  </main>
+{% endblock %}

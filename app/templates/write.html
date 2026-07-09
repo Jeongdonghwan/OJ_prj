@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}글쓰기 — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/write.css') }}">{% endblock %}
+{% block topnav %}{% endblock %}
+{% block adwings %}{% endblock %}
+{% block side %}{% endblock %}
+{% block rail %}{% endblock %}
+{% block gnb %}{% endblock %}
+{% block content %}
+  <form method="post" action="{{ url_for('community.write') }}" enctype="multipart/form-data" id="write-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="category" id="f-category" value="{{ edit_post.cat_slug if edit_post else 'free' }}">
+  <input type="hidden" name="post_type" id="f-post-type" value="{{ edit_post.post_type if edit_post else 'normal' }}">
+  {% if edit_post %}<input type="hidden" name="post_id" value="{{ edit_post.id }}">{% endif %}
+  <header class="whd">
+    <button class="x" type="button" aria-label="닫기" onclick="history.back()">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M6,6 L18,18 M18,6 L6,18" stroke="#191F28" stroke-width="1.9" stroke-linecap="round"/></svg>
+    </button>
+    <span class="t">글쓰기</span>
+    <button class="submit" type="submit">등록</button>
+  </header>
+  <main class="wbody">
+    <div class="wlabel">카테고리 선택</div>
+    <div class="chipbar" style="position:static;padding:0 0 6px;background:none" id="cat-chips">
+      <button class="chip{% if not edit_post or edit_post.cat_slug == 'free' %} on{% endif %}" type="button" data-value="free">자유수다</button>
+      <button class="chip{% if edit_post and edit_post.cat_slug == 'realestate' %} on{% endif %}" type="button" data-value="realestate">부동산</button>
+      <button class="chip{% if edit_post and edit_post.cat_slug == 'stock' %} on{% endif %}" type="button" data-value="stock">주식</button>
+      <button class="chip{% if edit_post and edit_post.cat_slug == 'coin' %} on{% endif %}" type="button" data-value="coin">코인</button>
+      <button class="chip{% if edit_post and edit_post.cat_slug == 'fund' %} on{% endif %}" type="button" data-value="fund">펀드·ETF</button>
+      <button class="chip{% if edit_post and edit_post.cat_slug == 'saving' %} on{% endif %}" type="button" data-value="saving">예적금·절약</button>
+    </div>
+    <div class="wlabel" style="margin-top:14px">말머리 (선택)</div>
+    <div class="chipbar" style="position:static;padding:0 0 6px;background:none" id="type-chips">
+      <button class="chip{% if not edit_post or edit_post.post_type == 'normal' %} on{% endif %}" type="button" data-value="normal">일반</button>
+      <button class="chip{% if edit_post and edit_post.post_type == 'profit' %} on{% endif %}" type="button" data-value="profit">수익인증</button>
+      <button class="chip{% if edit_post and edit_post.post_type == 'trade' %} on{% endif %}" type="button" data-value="trade">거래인증</button>
+      <button class="chip{% if edit_post and edit_post.post_type == 'question' %} on{% endif %}" type="button" data-value="question">질문</button>
+    </div>
+    <div id="profit-row" style="display:{% if edit_post and edit_post.post_type == 'profit' %}block{% else %}none{% endif %};padding:4px 0 2px">
+      <input type="number" name="profit_amount" placeholder="수익 금액 (원, 선택)" value="{{ edit_post.profit_amount if edit_post and edit_post.profit_amount is not none else '' }}" style="width:100%;border:0.5px solid var(--line);border-radius:12px;padding:10px 14px;font-family:inherit;font-size:14px;outline:none">
+    </div>
+    {% if is_expert %}
+    <div class="wlabel" style="margin-top:14px">칼럼으로 발행 (전문가)</div>
+    <div class="chipbar" style="position:static;padding:0 0 6px;background:none" id="column-chips">
+      <button class="chip{% if not edit_post or not edit_post.is_column %} on{% endif %}" type="button" data-value="">일반 글</button>
+      <button class="chip{% if edit_post and edit_post.is_column and edit_post.column_tag == '절세' %} on{% endif %}" type="button" data-value="절세">칼럼 · 절세</button>
+      <button class="chip{% if edit_post and edit_post.is_column and edit_post.column_tag == '내집마련' %} on{% endif %}" type="button" data-value="내집마련">칼럼 · 내집마련</button>
+      <button class="chip{% if edit_post and edit_post.is_column and edit_post.column_tag == '연금·노후' %} on{% endif %}" type="button" data-value="연금·노후">칼럼 · 연금·노후</button>
+      <button class="chip{% if edit_post and edit_post.is_column and edit_post.column_tag == '초보투자' %} on{% endif %}" type="button" data-value="초보투자">칼럼 · 초보투자</button>
+    </div>
+    <input type="hidden" name="column_tag" id="f-column-tag" value="{{ edit_post.column_tag if edit_post and edit_post.is_column else '' }}">
+    {% endif %}
+    <input class="wtitle" type="text" name="title" placeholder="제목을 입력하세요" aria-label="제목" maxlength="100" required value="{{ edit_post.title if edit_post else '' }}">
+    <textarea class="wtext" name="content" placeholder="자유롭게 이야기를 나눠보세요.&#10;&#10;· 수익 인증은 사진과 함께 올리면 반응이 좋아요&#10;· 특정 종목 매수 권유, 리딩방 홍보는 제재 대상입니다" aria-label="내용" required>{{ edit_post.content if edit_post else '' }}</textarea>
+    <div id="img-preview" style="display:flex;gap:8px;flex-wrap:wrap;padding:6px 0"></div>
+    <div class="wnote">오재 커뮤니티의 글은 정보 공유 목적이며 투자 권유가 아닙니다. 투자 판단의 책임은 본인에게 있습니다.</div>
+  </main>
+  <div class="wtool">
+    <button type="button" id="btn-photo"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2" fill="none" stroke="#4E5968" stroke-width="1.7"/><circle cx="9" cy="10.5" r="1.8" fill="none" stroke="#4E5968" stroke-width="1.7"/><path d="M4.5,17 L9.5,13 L12.5,15.5 L16.5,11.5 L20,15" fill="none" stroke="#4E5968" stroke-width="1.7" stroke-linejoin="round"/></svg>사진</button>
+    <input type="file" name="images" id="f-images" accept=".jpg,.jpeg,.png,.webp" multiple style="display:none">
+    <button type="button" onclick="return false"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M12,4 v16 M4,12 h16" stroke="#4E5968" stroke-width="1.7" stroke-linecap="round"/></svg>투표 등 추가 기능은 추후</button>
+  </div>
+  </form>
+{% endblock %}
+{% block page_js %}
+<script src="{{ url_for('static', filename='js/write.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ '회원가입' if mode == 'signup' else '로그인' }} — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<style>
+.eform{padding:0 28px;display:flex;flex-direction:column;gap:10px}
+.eform input{border:0.5px solid #D5D9DE;border-radius:14px;padding:15px;font-size:15px;font-family:inherit;outline:none}
+.eform input:focus{border-color:var(--ink)}
+.eform .err{font-size:12.5px;color:var(--red-deep);padding:0 2px}
+</style>{% endblock %}
+{% block topnav %}{% endblock %}
+{% block adwings %}{% endblock %}
+{% block side %}{% endblock %}
+{% block rail %}{% endblock %}
+{% block gnb %}{% endblock %}
+{% block content %}
+  <main class="lg" style="flex:none;padding-bottom:28px">
+    <svg width="56" height="52" viewBox="0 0 36 34" aria-hidden="true"><path d="M4,4 a4,4 0 0 0 -4,4 v14 a4,4 0 0 0 4,4 h5 l3,6 l5,-6 h15 a4,4 0 0 0 4,-4 v-14 a4,4 0 0 0 -4,-4 z" fill="#E0403C"/><path d="M8,20 L14,13 L18,16 L26,7" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M22.5,6.5 L26.5,6.5 L26.5,10.5" fill="none" stroke="#FFF3EC" stroke-width="3" stroke-linecap="round"/></svg>
+    <div class="word" style="font-size:24px">{{ '이메일로 시작하기' if mode == 'signup' else '이메일 로그인' }}</div>
+  </main>
+  <form class="eform" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="email" name="email" placeholder="이메일" required value="{{ form_email or '' }}">
+    <input type="password" name="password" placeholder="비밀번호" required minlength="8">
+    {% if mode == 'signup' %}
+    <input type="text" name="nickname" placeholder="닉네임 (2~12자)" required minlength="2" maxlength="12" value="{{ form_nickname or '' }}">
+    {% endif %}
+    {% if error %}<div class="err">{{ error }}</div>{% endif %}
+    <button class="sb kakao" type="submit" style="background:var(--red);color:#fff">{{ '가입하기' if mode == 'signup' else '로그인' }}</button>
+  </form>
+  <div class="lgft" style="padding:16px 0 0">
+    {% if mode == 'signup' %}이미 계정이 있으신가요? <a href="{{ url_for('auth.email_login') }}">로그인</a>{% else %}계정이 없으신가요? <a href="{{ url_for('auth.email_signup') }}">가입하기</a>{% endif %}
+    · <a href="{{ url_for('auth.login') }}">다른 방법</a>
+  </div>
+{% endblock %}

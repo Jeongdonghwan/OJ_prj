@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}마이페이지 — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/my.css') }}">{% endblock %}
+{% block content %}
+  <header class="hd">
+    <h1>마이페이지</h1>
+    <button class="hbtn" aria-label="설정">
+      <svg width="21" height="21" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="#191F28" stroke-width="1.8"/><path d="M12,3.5 l1.2,2.3 2.5,-0.6 0.6,2.5 2.3,1.2 -1,2.3 1,2.3 -2.3,1.2 -0.6,2.5 -2.5,-0.6 -1.2,2.3 -1.2,-2.3 -2.5,0.6 -0.6,-2.5 -2.3,-1.2 1,-2.3 -1,-2.3 2.3,-1.2 0.6,-2.5 2.5,0.6 z" fill="none" stroke="#191F28" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    </button>
+  </header>
+  <section class="pf">
+    <div class="top">
+      <span class="avt" style="background:{{ avatar_bg(current_user) }}">
+        <img src="{{ avatar_url(current_user) }}" width="46" height="46" alt="">
+      </span>
+      <div>
+        <div class="nick">{{ current_user.nickname }}</div>
+        <div class="sub">{{ current_user.created_at.strftime('%Y.%m') }} 가입{% if current_user.points %} · {{ current_user.points|comma }}P{% endif %}</div>
+      </div>
+      <button class="edit">프로필 수정</button>
+    </div>
+    <div class="stats">
+      <a class="st" href="#my-posts"><b>{{ stats.posts }}</b><span>내 글</span></a>
+      <a class="st" href="#my-comments"><b>{{ stats.comments }}</b><span>댓글</span></a>
+      <a class="st" href="#my-scraps"><b>{{ stats.scraps }}</b><span>스크랩</span></a>
+    </div>
+  </section>
+  {% if not current_user.is_verified %}
+  <a class="xbn" href="{{ url_for('columns.expert_apply') }}">
+    <div>
+      <div class="t1">전문가 인증</div>
+      <div class="t2">자격을 인증하고 칼럼을 써보세요</div>
+    </div>
+    <span class="go">신청하기 →</span>
+  </a>
+  {% endif %}
+  {% if my_posts %}
+  <section class="menu" id="my-posts" style="margin-bottom:14px">
+    {% for p in my_posts %}
+    <a class="mi" href="{{ url_for('community.post_detail', post_id=p.id) }}"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.title }}</span><span class="ar">›</span></a>
+    {% endfor %}
+  </section>
+  {% endif %}
+  <nav class="menu">
+    <a class="mi" href="{{ url_for('main.notifications') }}">알림 설정<span class="ar">›</span></a>
+    <a class="mi" href="#">관심 카테고리<span class="ar">›</span></a>
+    <a class="mi" href="#">공지사항<span class="ar">›</span></a>
+    <a class="mi" href="#">고객센터 · 문의<span class="ar">›</span></a>
+    <a class="mi" href="{{ url_for('main.policy') }}">약관 및 정책<span class="ar">›</span></a>
+    <a class="mi out" href="{{ url_for('auth.logout') }}">로그아웃</a>
+  </nav>
+{% endblock %}
+{% block page_js %}
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vote.js') }}"></script>
+{% endblock %}

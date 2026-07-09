@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h2>재테크 캘린더 일정</h2>
+<div class="card">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <p>날짜: <input type="date" name="event_date" required>
+       제목: <input type="text" name="title" size="40" maxlength="60" required>
+       <label><input type="checkbox" name="is_hot" value="1"> 핫 표시</label></p>
+    {% if error %}<div class="err">{{ error }}</div>{% endif %}
+    <button class="primary" type="submit">등록</button>
+  </form>
+</div>
+<table>
+  <tr><th>날짜</th><th>제목</th><th>핫</th></tr>
+  {% for e in events %}
+  <tr><td>{{ e.event_date }}</td><td>{{ e.title }}</td><td>{{ '🔥' if e.is_hot }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

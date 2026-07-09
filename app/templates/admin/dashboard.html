@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h2>대시보드</h2>
+<div class="card">
+  <p>전문가 인증 대기: <b>{{ counts.pending_experts }}</b>건</p>
+  <p>미처리 신고: <b>{{ counts.pending_reports }}</b>건</p>
+  <p>금지어 플래그 글: <b>{{ counts.flagged_posts }}</b>건</p>
+</div>
+{% endblock %}

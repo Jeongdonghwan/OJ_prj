@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h2>금지어 플래그 글 검토</h2>
+<table>
+  <tr><th>ID</th><th>제목</th><th>내용(앞부분)</th><th>처리</th></tr>
+  {% for p in posts %}
+  <tr>
+    <td>{{ p.id }} <a href="{{ url_for('community.post_detail', post_id=p.id) }}" target="_blank">보기</a></td>
+    <td>{{ p.title }}</td>
+    <td>{{ p.content[:80] }}</td>
+    <td>
+      <form class="inline" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="post_id" value="{{ p.id }}">
+        <button name="action" value="clear">문제없음</button>
+        <button class="primary" name="action" value="delete">삭제</button>
+      </form>
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="4">검토할 글이 없습니다.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

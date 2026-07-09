@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — 오재{% endblock %}
+{% block meta %}<meta name="description" content="{{ post.content[:120] }}">
+<meta property="og:title" content="{{ post.title }}">
+<meta property="og:description" content="{{ post.content[:120] }}">
+{% if post.thumbnail %}<meta property="og:image" content="{{ post.thumbnail }}">{% endif %}
+<meta property="og:type" content="article">{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/post.css') }}">{% endblock %}
+{% block content %}
+  <header class="hd">
+    <button class="back" aria-label="뒤로" onclick="history.back()">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M14.5,5 L7.5,12 L14.5,19" fill="none" stroke="#191F28" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span class="cat">{{ post.cat_name }}</span>
+    <button class="etc" aria-label="더보기" id="etc-btn">
+      <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.5" fill="#191F28"/><circle cx="12" cy="12" r="1.5" fill="#191F28"/><circle cx="12" cy="18.5" r="1.5" fill="#191F28"/></svg>
+    </button>
+  </header>
+
+  <main class="body">
+    <h1 class="tt">{% if post.post_type == 'profit' %}<span class="tag-p">수익인증</span> {% elif post.post_type == 'trade' %}<span class="tag-t">거래인증</span> {% elif post.post_type == 'question' %}<span class="tag-q">질문</span> {% endif %}{{ post.title }}</h1>
+
+    <div class="who">
+      <span class="avt" style="background:{{ avatar_bg(post) }}">
+        <img src="{{ avatar_url(post) }}" width="34" height="34" alt="">
+      </span>
+      <div>
+        <div class="nick">{{ post.nickname }}{% if post.is_verified %}
+          <svg width="14" height="14" viewBox="0 0 24 24" aria-label="인증 전문가"><path d="M12,2 L14.6,4.2 L18,4 L18.8,7.3 L21.7,9.1 L20.3,12 L21.7,14.9 L18.8,16.7 L18,20 L14.6,19.8 L12,22 L9.4,19.8 L6,20 L5.2,16.7 L2.3,14.9 L3.7,12 L2.3,9.1 L5.2,7.3 L6,4 L9.4,4.2 Z" fill="#E0403C"/><path d="M8.5,12.2 L11,14.6 L15.5,9.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {% endif %}</div>
+        <div class="meta">{{ post.created_at|time_ago }} · 조회 {{ post.view_count|comma }}</div>
+      </div>
+      {% if current_user.is_authenticated and current_user.id != post.user_id %}
+      <button class="follow{% if post.following %} on{% endif %}" data-user-id="{{ post.user_id }}">{% if post.following %}팔로잉{% else %}팔로우{% endif %}</button>
+      {% endif %}
+    </div>
+
+    <div class="ct">
+      {% for para in post.content.split('\n') %}{% if para.strip() %}<p>{{ para }}</p>{% endif %}{% endfor %}
+    </div>
+
+    {% for img in post.images %}
+    <img src="{{ img.path }}" alt="" style="width:100%;border-radius:14px;margin:6px 0 18px;display:block">
+    {% endfor %}
+
+    {% if post.is_column %}
+    <div style="font-size:11.5px;color:var(--gray-light);line-height:1.6;padding:6px 0 14px">본 콘텐츠는 정보 제공 목적이며 투자 권유가 아닙니다.</div>
+    {% endif %}
+
+    <div class="acts">
+      <button class="pill like{% if post.liked %} liked{% endif %}" data-post-id="{{ post.id }}"><svg width="15" height="15" viewBox="0 0 24 24"><path d="M7,10.5 L10,3.5 a2.4,2.4 0 0 1 2.4,2.4 V9 h5.4 a2,2 0 0 1 2,2.3 l-1.1,6.4 a2,2 0 0 1 -2,1.7 H7 M7,10.5 H4 a1,1 0 0 0 -1,1 v6.9 a1,1 0 0 0 1,1 h3 z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>도움됐어요 <span class="lc">{{ post.like_count|comma }}</span></button>
+      <button class="pill scrap{% if post.scrapped %} liked{% endif %}" data-post-id="{{ post.id }}"><svg width="15" height="15" viewBox="0 0 24 24"><path d="M6.5,3.5 h11 a1,1 0 0 1 1,1 V21 L12,16.8 L5.5,21 V4.5 a1,1 0 0 1 1,-1 z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>스크랩</button>
+      <button class="pill share"><svg width="15" height="15" viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="17.5" cy="5.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="17.5" cy="18.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.2,10.8 L15.3,6.7 M8.2,13.2 L15.3,17.3" stroke="currentColor" stroke-width="1.7"/></svg>공유</button>
+    </div>
+
+    <div class="cmt-hd">댓글 <b>{{ post.comment_count }}</b></div>
+
+    {% for c in comments %}
+    <div class="cmt{% if c.parent_id %} reply{% endif %}" data-comment-id="{{ c.id }}">
+      <span class="avt sm" style="background:{{ avatar_bg(c) }}">
+        <img src="{{ avatar_url(c) }}" width="27" height="27" alt="">
+      </span>
+      <div class="bd">
+        <div class="nick">{{ c.nickname }}{% if c.is_verified %}
+          <svg width="14" height="14" viewBox="0 0 24 24" aria-label="인증 전문가"><path d="M12,2 L14.6,4.2 L18,4 L18.8,7.3 L21.7,9.1 L20.3,12 L21.7,14.9 L18.8,16.7 L18,20 L14.6,19.8 L12,22 L9.4,19.8 L6,20 L5.2,16.7 L2.3,14.9 L3.7,12 L2.3,9.1 L5.2,7.3 L6,4 L9.4,4.2 Z" fill="#E0403C"/><path d="M8.5,12.2 L11,14.6 L15.5,9.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {% endif %}{% if c.user_id == post.user_id %} <span style="font-size:10.5px;color:var(--red);font-weight:600;background:var(--red-tint);border-radius:5px;padding:1px 5px">작성자</span>{% endif %}<span class="tm">{{ c.created_at|time_ago }}</span></div>
+        <div class="tx">{% if c.deleted_at %}삭제된 댓글입니다.{% else %}{{ c.content }}{% endif %}</div>
+        {% if not c.parent_id and not c.deleted_at %}
+        <button class="re" data-comment-id="{{ c.id }}">답글 달기</button>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+  </main>
+
+  <div class="wr">
+    <form id="comment-form" method="post" action="{{ url_for('community.add_comment', post_id=post.id) }}" style="display:flex;gap:9px;flex:1;align-items:center">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="parent_id" value="" id="parent-id">
+      <input type="text" name="content" placeholder="댓글을 남겨보세요" aria-label="댓글 입력" required>
+      <button class="send" type="submit" aria-label="등록">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M4,12 L20,4 L16.5,20 L11.5,13.5 Z M11.5,13.5 L20,4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+    </form>
+  </div>
+{% endblock %}
+{% block page_js %}
+<script>window.CSRF_TOKEN = "{{ csrf_token() }}"; window.POST_ID = {{ post.id }};
+window.IS_OWNER = {{ 'true' if current_user.is_authenticated and current_user.id == post.user_id else 'false' }};</script>
+<script src="{{ url_for('static', filename='js/post.js') }}"></script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vote.js') }}"></script>
+{% endblock %}

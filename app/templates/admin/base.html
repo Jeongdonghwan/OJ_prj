@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}오재 관리자{% endblock %}</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;background:#f5f6f8;color:#222}
+.nav{background:#191F28;color:#fff;padding:12px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.nav b{color:#E0403C}
+.nav a{color:#cfd4da;text-decoration:none;font-size:14px}
+.nav a:hover{color:#fff}
+.wrap{max-width:960px;margin:24px auto;padding:0 16px}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:14px}
+th,td{border:1px solid #e2e5e9;padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#eef0f2}
+form.inline{display:inline}
+input,textarea,select{font-family:inherit;font-size:14px;padding:6px 8px;margin:2px 0;border:1px solid #ccc;border-radius:4px}
+button{font-size:13px;padding:6px 12px;border:1px solid #999;background:#fff;border-radius:4px;cursor:pointer}
+button.primary{background:#E0403C;color:#fff;border-color:#E0403C}
+.err{color:#c0392b;font-size:13px;margin:6px 0}
+.card{background:#fff;border:1px solid #e2e5e9;border-radius:6px;padding:16px;margin-bottom:16px}
+h2{font-size:18px}
+</style>
+</head>
+<body>
+<div class="nav">
+  <b>오재 관리자</b>
+  <a href="{{ url_for('admin.dashboard') }}">대시보드</a>
+  <a href="{{ url_for('admin.quiz') }}">퀴즈</a>
+  <a href="{{ url_for('admin.poll') }}">투표</a>
+  <a href="{{ url_for('admin.calendar') }}">캘린더</a>
+  <a href="{{ url_for('admin.experts') }}">전문가 심사</a>
+  <a href="{{ url_for('admin.reports') }}">신고</a>
+  <a href="{{ url_for('admin.flagged') }}">플래그 글</a>
+  <a href="{{ url_for('main.home') }}" style="margin-left:auto">사이트로 →</a>
+</div>
+<div class="wrap">{% block content %}{% endblock %}</div>
+</body>
+</html>

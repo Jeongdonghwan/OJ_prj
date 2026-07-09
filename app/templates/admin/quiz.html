@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h2>퀴즈 등록/예약</h2>
+<div class="card">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <p>날짜: <input type="date" name="quiz_date" required></p>
+    <p>문제: <input type="text" name="question" size="70" required></p>
+    <p>보기1: <input type="text" name="choice1" required>
+       보기2: <input type="text" name="choice2" required></p>
+    <p>보기3: <input type="text" name="choice3">
+       보기4: <input type="text" name="choice4"></p>
+    <p>정답 번호: <select name="answer_no"><option>1</option><option>2</option><option>3</option><option>4</option></select></p>
+    <p>해설: <textarea name="explanation" rows="3" cols="70" required></textarea></p>
+    {% if error %}<div class="err">{{ error }}</div>{% endif %}
+    <button class="primary" type="submit">등록</button>
+  </form>
+</div>
+<table>
+  <tr><th>날짜</th><th>문제</th><th>정답</th></tr>
+  {% for q in quizzes %}
+  <tr><td>{{ q.quiz_date }}</td><td>{{ q.question }}</td><td>{{ q.answer_no }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

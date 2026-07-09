@@ -1,0 +1,22 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h2>투표 등록</h2>
+<div class="card">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <p>질문: <input type="text" name="question" size="60" required></p>
+    <p>오른다 라벨: <input type="text" name="option_up" value="오른다" required>
+       떨어진다 라벨: <input type="text" name="option_down" value="떨어진다" required></p>
+    <p>시작: <input type="datetime-local" name="starts_at" required>
+       종료: <input type="datetime-local" name="ends_at" required></p>
+    {% if error %}<div class="err">{{ error }}</div>{% endif %}
+    <button class="primary" type="submit">등록</button>
+  </form>
+</div>
+<table>
+  <tr><th>ID</th><th>질문</th><th>기간</th><th>활성</th></tr>
+  {% for p in polls %}
+  <tr><td>{{ p.id }}</td><td>{{ p.question }}</td><td>{{ p.starts_at }} ~ {{ p.ends_at }}</td><td>{{ p.is_active }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

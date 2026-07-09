@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h2>신고 처리</h2>
+<table>
+  <tr><th>ID</th><th>대상</th><th>사유</th><th>일시</th><th>처리</th></tr>
+  {% for r in reports %}
+  <tr>
+    <td>{{ r.id }}</td>
+    <td>{{ r.target_type }} #{{ r.target_id }}
+      {% if r.target_type == 'post' %}<a href="{{ url_for('community.post_detail', post_id=r.target_id) }}" target="_blank">보기</a>{% endif %}</td>
+    <td>{{ r.reason }}</td>
+    <td>{{ r.created_at }}</td>
+    <td>
+      <form class="inline" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="report_id" value="{{ r.id }}">
+        <button class="primary" name="action" value="resolve">처리 완료</button>
+        <button name="action" value="dismiss">기각</button>
+      </form>
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="5">미처리 신고가 없습니다.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}
