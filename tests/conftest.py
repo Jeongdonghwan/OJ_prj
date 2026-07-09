@@ -90,6 +90,27 @@ def admin_user(user_factory):
 
 
 @pytest.fixture()
+def post_factory(app):
+    def make(user, *, category="free", title="테스트 글", content="테스트 내용입니다",
+             post_type="normal", created_at=None, **kw):
+        from datetime import datetime
+        engine = db_engine.get_engine(app)
+        with engine.begin() as conn:
+            cat_id = conn.execute(sa.select(schema.categories.c.id).where(
+                schema.categories.c.slug == category)).scalar_one()
+            values = dict(
+                user_id=user["id"], category_id=cat_id, post_type=post_type,
+                title=title, content=content,
+                view_count=0, like_count=0, comment_count=0, is_flagged=0,
+                created_at=created_at or datetime.now(),
+            )
+            values.update(kw)
+            res = conn.execute(schema.posts.insert().values(**values))
+            return res.inserted_primary_key[0]
+    return make
+
+
+@pytest.fixture()
 def login(client):
     def do_login(u):
         with client.session_transaction() as sess:
