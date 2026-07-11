@@ -1,10 +1,13 @@
-from flask import Blueprint, current_app, redirect, render_template, request, url_for
+import secrets
+
+from flask import (Blueprint, current_app, redirect, render_template, request,
+                   session, url_for)
 from flask_login import login_required, login_user, logout_user
 
 from app.extensions import limiter
 from app.services import user_service
 from app.services.auth_service import User, get_user_by_id
-from app.services.oauth import get_kakao_client
+from app.services.oauth import get_kakao_client, get_naver_client
 
 bp = Blueprint("auth", __name__)
 
@@ -80,7 +83,31 @@ def kakao_callback():
     client = get_kakao_client(current_app)
     token = client.exchange_token(code)
     profile = client.get_profile(token)
-    row, created = user_service.get_or_create_kakao_user(profile)
+    row, created = user_service.get_or_create_social_user("kakao", profile)
+    login_user(User(row))
+    user_service.touch_last_login(row["id"])
+    return redirect(url_for("main.home"))
+
+
+@bp.get("/auth/naver")
+def naver_start():
+    state = secrets.token_urlsafe(16)
+    session["naver_state"] = state
+    client = get_naver_client(current_app)
+    return redirect(client.get_authorize_url(state))
+
+
+@bp.get("/auth/naver/callback")
+def naver_callback():
+    code = request.args.get("code")
+    state = request.args.get("state")
+    expected = session.pop("naver_state", None)
+    if not code or not state or not expected or state != expected:
+        return redirect(url_for("auth.login"))
+    client = get_naver_client(current_app)
+    token = client.exchange_token(code, state)
+    profile = client.get_profile(token)
+    row, created = user_service.get_or_create_social_user("naver", profile)
     login_user(User(row))
     user_service.touch_last_login(row["id"])
     return redirect(url_for("main.home"))

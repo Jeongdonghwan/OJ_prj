@@ -21,6 +21,9 @@ class Config:
     KAKAO_CLIENT_ID = os.environ.get("KAKAO_CLIENT_ID", "")
     KAKAO_CLIENT_SECRET = os.environ.get("KAKAO_CLIENT_SECRET", "")
     KAKAO_REDIRECT_URI = os.environ.get("KAKAO_REDIRECT_URI", "")
+    NAVER_CLIENT_ID = os.environ.get("NAVER_CLIENT_ID", "")
+    NAVER_CLIENT_SECRET = os.environ.get("NAVER_CLIENT_SECRET", "")
+    NAVER_REDIRECT_URI = os.environ.get("NAVER_REDIRECT_URI", "")
     ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
     ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-5")
 

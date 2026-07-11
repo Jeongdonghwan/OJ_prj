@@ -56,11 +56,11 @@ def verify_email_login(email, password):
     return dict(row)
 
 
-def get_or_create_kakao_user(profile):
-    """카카오 프로필로 기존 사용자 로그인 또는 신규 생성. 반환: (user_row, created)."""
+def get_or_create_social_user(provider, profile):
+    """소셜(kakao/naver) 프로필로 기존 사용자 로그인 또는 신규 생성. 반환: (user_row, created)."""
     conn = get_conn()
     row = conn.execute(sa.select(_u).where(
-        _u.c.oauth_provider == "kakao", _u.c.oauth_id == profile["oauth_id"]
+        _u.c.oauth_provider == provider, _u.c.oauth_id == profile["oauth_id"]
     )).mappings().first()
     if row:
         return dict(row), False
@@ -74,7 +74,7 @@ def get_or_create_kakao_user(profile):
     if email and email_exists(email, conn):
         email = None
     res = conn.execute(_u.insert().values(
-        email=email, oauth_provider="kakao", oauth_id=profile["oauth_id"],
+        email=email, oauth_provider=provider, oauth_id=profile["oauth_id"],
         nickname=nickname, avatar_no=1, status="active",
     ))
     uid = res.inserted_primary_key[0]
@@ -82,6 +82,10 @@ def get_or_create_kakao_user(profile):
     conn.commit()
     row = conn.execute(sa.select(_u).where(_u.c.id == uid)).mappings().one()
     return dict(row), True
+
+
+def get_or_create_kakao_user(profile):
+    return get_or_create_social_user("kakao", profile)
 
 
 def touch_last_login(user_id):
