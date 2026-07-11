@@ -84,5 +84,6 @@ app/
   static/avatars/     # 기본 아바타 12종 SVG
 batch/                # 단독 실행 배치 (fetch_news/daily_briefing/hot_posts/close_poll)
 scripts/              # init_db.py, seed.py
-tests/                # pytest 128개 (인메모리 SQLite, OAuth/LLM/RSS 목)
+tests/                # pytest (인메모리 SQLite, OAuth/LLM/RSS/푸시 목)
+ojae-app/             # Expo WebView 앱 셸 (별도 npm 프로젝트 — ojae-app/README.md 참고)
 ```

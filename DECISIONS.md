@@ -96,3 +96,37 @@ CLAUDE.md §1은 "PyMySQL 직접 쿼리 또는 SQLAlchemy Core 중 택1". **SQLA
 
 ## D25. 관리자 화면
 - 스펙 §8 "부트스트랩 수준으로 최소하게" — 외부 CDN 의존 없이 시스템 폰트 + 단일 인라인 스타일의 자체 미니 스타일로 구현(오프라인/보안 이점).
+
+---
+2차 추가 구현(steps 9~13) 중 내린 판단.
+
+## D26. 네이버 OAuth: state 파라미터 + 소셜 일반화 (step 9)
+- 네이버 API는 state 필수 → `session["naver_state"]`에 저장 후 콜백에서 pop-and-compare(1회용). 불일치/부재 시 로그인 없이 /login으로.
+- `get_or_create_kakao_user`를 `get_or_create_social_user(provider, profile)`로 일반화(카카오 래퍼 유지). D16(네이버 버튼 '준비 중' 알림)은 실제 시작 링크로 대체됨.
+
+## D27. 회원 탈퇴 = soft delete + PII 스크럽 (step 10)
+- `status='deleted'`, 닉네임 → `탈퇴회원{id}`(UNIQUE 닉네임 해제, 글/댓글 조인 표시도 자동 전환), email/oauth_id/password_hash/profile_img → NULL.
+- 글·댓글은 유지(커뮤니티 맥락 보존), 같은 소셜 계정 재가입은 새 계정(oauth_id 제거됨). 스토어 정책(§12 계정 삭제)은 계정 삭제+개인정보 제거로 충족.
+
+## D28. notification_settings 컬럼명과 게이트 범위 (step 10)
+- SQL 예약어 `column` 회피를 위해 `on_comment/on_reply/on_column`. 행 없음 = 전부 켜짐(백필 불필요).
+- 게이트는 `notify()` 최상단 — 꺼진 유형은 인앱 알림·푸시 모두 미발송(설정 off = 알림 자체 미수신으로 해석).
+
+## D29. 푸시 발송기 주입 + 비차단 (step 11)
+- `app.extensions["push_sender"]`로 주입(카카오/네이버와 동일 패턴), 실 구현은 Expo Push API(exp.host, 100개 청크).
+- 알림 생성 시점에 즉시 호출(§12 "배치 아님"), 전체 try/except — 푸시 장애가 댓글 작성 등 본 작업을 절대 실패시키지 않음. `DeviceNotRegistered` 티켓의 토큰은 삭제.
+
+## D30. push_tokens 토큰 기준 재배정 (step 11)
+- `token` UNIQUE upsert — 한 기기는 최근 로그인한 계정으로 재배정(기기당 1행 유지).
+
+## D31. 웹↔앱 푸시 토큰 핸드셰이크 (step 11+13)
+- 앱: `window.isOjaeApp=true` 선주입 + 토큰 발급 후 매 페이지 로드마다 `window.__ojaePushToken={token,platform}` 설정 & `ojae:pushtoken` 이벤트 발생.
+- 웹: base.html의 브릿지 스니펫(로그인 시에만 렌더)이 이벤트/변수를 감지해 `POST /api/push-token`, localStorage로 토큰+유저별 중복 전송 방지. MPA 리로드에 안전.
+
+## D32. SEO: SITE_URL 단일 기준 (step 12)
+- canonical/og:url/sitemap 절대 URL은 env `SITE_URL` 하나로 통일. sitemap은 요청 시 DB에서 SSR(현 규모 충분), posts/news 각 5,000개 캡. 커뮤니티 canonical은 `?cat=`만 유지(sort/cursor 제거).
+
+## D33. ojae-app은 동일 레포 하위 폴더 (step 13)
+- 스펙(§12)은 "별도 레포"라 했으나 웹 base.html 브릿지와의 원자적 변경을 위해 같은 레포의 `ojae-app/`로 구성(추후 분리 용이). EAS는 서브폴더 빌드 지원.
+- WebView 허용 목록에 kauth 외 `accounts.kakao.com`(카카오 로그인 폼 호스트) 포함.
+- react-native-webview 13.x의 범용 d.ts가 ref 타입을 노출하지 않아 `WebViewHandle` 인터페이스 + 캐스팅 래퍼(src/webview.ts)로 해결. `npx tsc --noEmit` 통과 확인(실기기/시뮬레이터 테스트는 불가 환경).
