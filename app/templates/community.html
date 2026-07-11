@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block title %}커뮤니티 — 오재{% endblock %}
+{% block description %}부동산·주식·코인·펀드·예적금 재테크 이야기를 나누는 오재 커뮤니티{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ config.SITE_URL }}{{ url_for('community.index', cat=cat) }}">{% endblock %}
 {% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/community.css') }}">{% endblock %}
 {% block content %}
   <header class="hd">

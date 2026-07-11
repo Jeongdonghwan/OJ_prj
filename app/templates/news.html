@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block title %}재테크뉴스 — 오재{% endblock %}
+{% block description %}부동산·증시·코인·금리 정책까지, 오늘의 재테크 뉴스를 한눈에{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ config.SITE_URL }}{{ url_for('news.index', category=category) }}">{% endblock %}
 {% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">{% endblock %}
 {% block content %}
   <header class="hd">

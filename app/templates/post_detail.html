@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block title %}{{ post.title }} — 오재{% endblock %}
-{% block meta %}<meta name="description" content="{{ post.content[:120] }}">
-<meta property="og:title" content="{{ post.title }}">
+{% block description %}{{ post.content[:120] }}{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ config.SITE_URL }}/post/{{ post.id }}">{% endblock %}
+{% block meta %}<meta property="og:title" content="{{ post.title }}">
 <meta property="og:description" content="{{ post.content[:120] }}">
-{% if post.thumbnail %}<meta property="og:image" content="{{ post.thumbnail }}">{% endif %}
+<meta property="og:url" content="{{ config.SITE_URL }}/post/{{ post.id }}">
+{% if post.thumbnail %}<meta property="og:image" content="{{ config.SITE_URL }}{{ post.thumbnail }}">{% endif %}
 <meta property="og:type" content="article">{% endblock %}
 {% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/post.css') }}">{% endblock %}
 {% block content %}

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ article.title }} — 오재{% endblock %}
-{% block meta %}<meta name="description" content="{{ article.summary or article.title }}">{% endblock %}
+{% block description %}{{ article.summary or article.title }}{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ config.SITE_URL }}/news/{{ article.id }}">{% endblock %}
 {% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/post.css') }}">{% endblock %}
 {% block content %}
   <header class="hd">

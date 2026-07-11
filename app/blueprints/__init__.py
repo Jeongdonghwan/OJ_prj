@@ -8,7 +8,8 @@ def register_blueprints(app):
     from app.blueprints.quiz import bp as quiz_bp
     from app.blueprints.api import bp as api_bp
     from app.blueprints.admin import bp as admin_bp
+    from app.blueprints.seo import bp as seo_bp
 
     for bp in (main_bp, auth_bp, community_bp, news_bp, columns_bp,
-               my_bp, quiz_bp, api_bp, admin_bp):
+               my_bp, quiz_bp, api_bp, admin_bp, seo_bp):
         app.register_blueprint(bp)

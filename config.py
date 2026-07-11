@@ -9,6 +9,7 @@ load_dotenv(BASE_DIR / ".env")
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
+    SITE_URL = os.environ.get("SITE_URL", "http://localhost:5000").rstrip("/")
     DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ojae_dev.db")
     UPLOAD_DIR = BASE_DIR / "app" / "static" / "uploads"
     MAX_CONTENT_LENGTH = 60 * 1024 * 1024  # 10장 x 5MB + 여유

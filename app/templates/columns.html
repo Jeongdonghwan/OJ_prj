@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block title %}전문가칼럼 — 오재{% endblock %}
+{% block description %}세무사·공인중개사·자산관리사 등 인증 전문가의 재테크 칼럼{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ config.SITE_URL }}{{ url_for('columns.index', tag=tag) }}">{% endblock %}
 {% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/column.css') }}">{% endblock %}
 {% block content %}
   <header class="hd">

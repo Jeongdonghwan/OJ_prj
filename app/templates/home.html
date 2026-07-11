@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ config.SITE_URL }}/">{% endblock %}
 {% block content %}
   <header class="hd">
     <div class="logo">

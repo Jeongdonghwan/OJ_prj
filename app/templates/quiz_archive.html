@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}지난 재테크 퀴즈 모음 — 오재{% endblock %}
-{% block meta %}<meta name="description" content="매일 하나씩, 오재 데일리 재테크 퀴즈의 문제와 해설 아카이브."> {% endblock %}
+{% block description %}매일 하나씩, 오재 데일리 재테크 퀴즈의 문제와 해설 아카이브{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ config.SITE_URL }}/quiz/archive">{% endblock %}
 {% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 <style>
 .qarch{padding:0 20px}
