@@ -7,7 +7,14 @@ from app.db.engine import get_conn
 _n = schema.notifications
 
 
+def _link_for(type_, ref_id):
+    if type_ in ("comment", "reply", "column"):
+        return f"/post/{ref_id}"
+    return "/notifications"
+
+
 def notify(user_id, type_, ref_id, message, conn=None, commit=True):
+    from app.services.push_service import push_to_user
     from app.services.settings_service import is_enabled
     own = conn is None
     conn = conn or get_conn()
@@ -17,6 +24,8 @@ def notify(user_id, type_, ref_id, message, conn=None, commit=True):
         user_id=user_id, type=type_, ref_id=ref_id, message=message, is_read=0))
     if own and commit:
         conn.commit()
+    # §12: 알림 생성 시점에 즉시 푸시 (배치 아님). 실패해도 본 작업엔 영향 없음.
+    push_to_user(user_id, "오재", message, {"url": _link_for(type_, ref_id)})
 
 
 def list_notifications(user_id, limit=50):

@@ -19,6 +19,25 @@
 {% block content %}{% endblock %}
 {% block gnb %}{% include "_gnb.html" %}{% endblock %}
 </div>
+{% if current_user.is_authenticated %}
+<script>
+(function(){ /* 앱(WebView) 푸시 토큰 브릿지 — 앱이 window.__ojaePushToken 주입 */
+  function sendToken(){
+    var t = window.__ojaePushToken;
+    if(!t || !t.token) return;
+    var key = 'ojae_pt_sent_' + t.token.slice(-16) + '_{{ current_user.id }}';
+    if(localStorage.getItem(key)) return;
+    fetch('/api/push-token', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token() }}'},
+      body: JSON.stringify({token: t.token, platform: t.platform})
+    }).then(function(r){ if(r.ok) localStorage.setItem(key, '1'); });
+  }
+  window.addEventListener('ojae:pushtoken', sendToken);
+  sendToken();
+})();
+</script>
+{% endif %}
 {% block page_js %}{% endblock %}
 </body>
 </html>

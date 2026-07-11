@@ -120,6 +120,21 @@ def report():
     return jsonify(ok=True)
 
 
+@bp.post("/push-token")
+def push_token():
+    from app.services.push_service import register_token
+    if not current_user.is_authenticated:
+        return jsonify(error="login_required"), 401
+    data = request.get_json(silent=True) or {}
+    token = data.get("token")
+    platform = data.get("platform")
+    if (not isinstance(token, str) or not token.strip() or len(token) > 200
+            or platform not in ("ios", "android")):
+        return jsonify(error="bad_request"), 400
+    register_token(current_user.id, token.strip(), platform)
+    return jsonify(ok=True)
+
+
 @bp.post("/news/<int:news_id>/comment")
 @limiter.limit("5 per minute")
 @login_required
