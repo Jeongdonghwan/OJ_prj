@@ -269,6 +269,25 @@ ad_slots = sa.Table(
     **MYSQL_KW,
 )
 
+notification_settings = sa.Table(
+    "notification_settings", metadata,
+    sa.Column("user_id", sa.Integer, sa.ForeignKey("users.id"), primary_key=True),
+    sa.Column("on_comment", sa.SmallInteger, nullable=False, default=1),
+    sa.Column("on_reply", sa.SmallInteger, nullable=False, default=1),
+    sa.Column("on_column", sa.SmallInteger, nullable=False, default=1),
+    **MYSQL_KW,
+)
+
+push_tokens = sa.Table(
+    "push_tokens", metadata,
+    sa.Column("id", sa.Integer, primary_key=True, autoincrement=True),
+    sa.Column("user_id", sa.Integer, sa.ForeignKey("users.id"), nullable=False),
+    sa.Column("token", sa.String(200), unique=True, nullable=False),
+    sa.Column("platform", sa.Enum("ios", "android", name="push_platform_enum"), nullable=False),
+    sa.Column("updated_at", sa.DateTime, nullable=False, default=datetime.now),
+    **MYSQL_KW,
+)
+
 hot_cache = sa.Table(
     "hot_cache", metadata,
     sa.Column("cache_key", sa.String(40), primary_key=True),

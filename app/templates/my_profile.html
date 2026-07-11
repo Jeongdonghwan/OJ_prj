@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}프로필 수정 — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/write.css') }}">
+<style>
+.pform{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.pform label{font-size:12.5px;font-weight:600;color:var(--gray)}
+.pform input[type=text]{border:0.5px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14.5px;font-family:inherit;outline:none}
+.pform input[type=text]:focus{border-color:var(--ink)}
+.pform .err{font-size:12.5px;color:var(--red-deep)}
+.pform .ok{font-size:12.5px;color:#1E7A5A}
+.pavt{display:flex;align-items:center;gap:14px}
+.pavt .avt{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pavt .avt img{width:100%;height:100%;object-fit:cover}
+</style>{% endblock %}
+{% block topnav %}{% endblock %}
+{% block adwings %}{% endblock %}
+{% block side %}{% endblock %}
+{% block rail %}{% endblock %}
+{% block gnb %}{% endblock %}
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <header class="whd">
+    <button class="x" type="button" aria-label="닫기" onclick="history.back()">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M6,6 L18,18 M18,6 L6,18" stroke="#191F28" stroke-width="1.9" stroke-linecap="round"/></svg>
+    </button>
+    <span class="t">프로필 수정</span>
+    <button class="submit" type="submit">저장</button>
+  </header>
+  <main class="pform">
+    <div class="pavt">
+      <span class="avt" style="background:{{ avatar_bg(current_user) }}">
+        <img src="{{ avatar_url(current_user) }}" width="64" height="64" alt="">
+      </span>
+      <div>
+        <label>프로필 사진 (jpg/png/webp, 5MB 이하)</label><br>
+        <input type="file" name="photo" accept=".jpg,.jpeg,.png,.webp" style="margin-top:6px;font-size:13px">
+      </div>
+    </div>
+    <label>닉네임 (2~12자, 30일에 1번 변경 가능)</label>
+    <input type="text" name="nickname" minlength="2" maxlength="12" value="{{ current_user.nickname }}">
+    {% if error %}<div class="err">{{ error }}</div>{% endif %}
+    {% if message %}<div class="ok">{{ message }}</div>{% endif %}
+    <div class="wnote">프로필 사진을 올리면 기본 아바타 대신 표시됩니다.</div>
+  </main>
+  </form>
+{% endblock %}

@@ -17,7 +17,7 @@
         <div class="nick">{{ current_user.nickname }}</div>
         <div class="sub">{{ current_user.created_at.strftime('%Y.%m') }} 가입{% if current_user.points %} · {{ current_user.points|comma }}P{% endif %}</div>
       </div>
-      <button class="edit">프로필 수정</button>
+      <button class="edit" onclick="location.href='{{ url_for('my.profile') }}'">프로필 수정</button>
     </div>
     <div class="stats">
       <a class="st" href="#my-posts"><b>{{ stats.posts }}</b><span>내 글</span></a>
@@ -42,12 +42,13 @@
   </section>
   {% endif %}
   <nav class="menu">
-    <a class="mi" href="{{ url_for('main.notifications') }}">알림 설정<span class="ar">›</span></a>
+    <a class="mi" href="{{ url_for('my.settings') }}">알림 설정<span class="ar">›</span></a>
     <a class="mi" href="#">관심 카테고리<span class="ar">›</span></a>
     <a class="mi" href="#">공지사항<span class="ar">›</span></a>
     <a class="mi" href="#">고객센터 · 문의<span class="ar">›</span></a>
     <a class="mi" href="{{ url_for('main.policy') }}">약관 및 정책<span class="ar">›</span></a>
     <a class="mi out" href="{{ url_for('auth.logout') }}">로그아웃</a>
+    <a class="mi out" href="{{ url_for('my.withdraw') }}">회원 탈퇴</a>
   </nav>
 {% endblock %}
 {% block page_js %}

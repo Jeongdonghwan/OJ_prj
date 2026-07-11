@@ -8,8 +8,11 @@ _n = schema.notifications
 
 
 def notify(user_id, type_, ref_id, message, conn=None, commit=True):
+    from app.services.settings_service import is_enabled
     own = conn is None
     conn = conn or get_conn()
+    if not is_enabled(user_id, type_, conn):
+        return
     conn.execute(_n.insert().values(
         user_id=user_id, type=type_, ref_id=ref_id, message=message, is_read=0))
     if own and commit:

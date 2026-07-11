@@ -95,6 +95,26 @@ def touch_last_login(user_id):
     conn.commit()
 
 
+def update_profile_img(user_id, path):
+    conn = get_conn()
+    conn.execute(sa.update(_u).where(_u.c.id == user_id).values(profile_img=path))
+    conn.commit()
+
+
+def withdraw(user_id):
+    """회원 탈퇴: soft delete + PII 스크럽. 글/댓글은 '탈퇴회원N' 표시로 유지."""
+    conn = get_conn()
+    nickname = f"탈퇴회원{user_id}"
+    n = 0
+    while nickname_exists(nickname, conn):
+        n += 1
+        nickname = f"탈퇴회원{user_id}_{n}"
+    conn.execute(sa.update(_u).where(_u.c.id == user_id).values(
+        status="deleted", nickname=nickname,
+        email=None, oauth_id=None, password_hash=None, profile_img=None))
+    conn.commit()
+
+
 def change_nickname(user_id, new_nickname):
     """30일 1회 제한."""
     conn = get_conn()

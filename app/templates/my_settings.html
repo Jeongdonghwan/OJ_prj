@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}알림 설정 — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/write.css') }}">
+<style>
+.sform{padding:8px 20px}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:0.5px solid var(--line)}
+.srow:last-of-type{border-bottom:0}
+.srow .t1{font-size:15px;font-weight:600}
+.srow .t2{font-size:12px;color:var(--gray);margin-top:3px}
+.srow input[type=checkbox]{width:20px;height:20px;accent-color:#191F28}
+.ok{font-size:12.5px;color:#1E7A5A;padding:10px 0}
+</style>{% endblock %}
+{% block topnav %}{% endblock %}
+{% block adwings %}{% endblock %}
+{% block side %}{% endblock %}
+{% block rail %}{% endblock %}
+{% block gnb %}{% endblock %}
+{% block content %}
+  <form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <header class="whd">
+    <button class="x" type="button" aria-label="닫기" onclick="history.back()">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M6,6 L18,18 M18,6 L6,18" stroke="#191F28" stroke-width="1.9" stroke-linecap="round"/></svg>
+    </button>
+    <span class="t">알림 설정</span>
+    <button class="submit" type="submit">저장</button>
+  </header>
+  <main class="sform">
+    {% if message %}<div class="ok">{{ message }}</div>{% endif %}
+    <div class="srow">
+      <div><div class="t1">댓글 알림</div><div class="t2">내 글에 새 댓글이 달리면 알려드려요</div></div>
+      <input type="checkbox" name="on_comment" value="1"{% if settings.on_comment %} checked{% endif %}>
+    </div>
+    <div class="srow">
+      <div><div class="t1">답글 알림</div><div class="t2">내 댓글에 답글이 달리면 알려드려요</div></div>
+      <input type="checkbox" name="on_reply" value="1"{% if settings.on_reply %} checked{% endif %}>
+    </div>
+    <div class="srow">
+      <div><div class="t1">전문가 새 칼럼</div><div class="t2">팔로우한 전문가의 새 칼럼을 알려드려요</div></div>
+      <input type="checkbox" name="on_column" value="1"{% if settings.on_column %} checked{% endif %}>
+    </div>
+  </main>
+  </form>
+{% endblock %}

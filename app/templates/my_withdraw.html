@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}회원 탈퇴 — 오재{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/write.css') }}">
+<style>
+.wdr{padding:20px}
+.wdr h1{font-size:19px;font-weight:800;letter-spacing:-0.5px;margin-bottom:14px}
+.wdr ul{padding-left:18px;font-size:14px;line-height:1.9;color:#4E5968}
+.wdr .danger{margin-top:24px;width:100%;background:var(--red);color:#fff;border:0;border-radius:14px;padding:15px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
+.wdr .keep{display:block;text-align:center;margin-top:14px;font-size:13.5px;color:var(--gray);font-weight:600}
+</style>{% endblock %}
+{% block topnav %}{% endblock %}
+{% block adwings %}{% endblock %}
+{% block side %}{% endblock %}
+{% block rail %}{% endblock %}
+{% block gnb %}{% endblock %}
+{% block content %}
+  <header class="whd">
+    <button class="x" type="button" aria-label="닫기" onclick="history.back()">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M6,6 L18,18 M18,6 L6,18" stroke="#191F28" stroke-width="1.9" stroke-linecap="round"/></svg>
+    </button>
+    <span class="t">회원 탈퇴</span>
+    <span style="width:48px"></span>
+  </header>
+  <main class="wdr">
+    <h1>정말 탈퇴하시겠어요?</h1>
+    <ul>
+      <li>계정 정보(이메일, 소셜 연결, 프로필)는 즉시 삭제됩니다.</li>
+      <li>작성한 글과 댓글은 남지만 <b>탈퇴회원</b>으로 표시됩니다.</li>
+      <li>적립한 포인트는 소멸되며 복구할 수 없습니다.</li>
+      <li>같은 소셜 계정으로 다시 가입하면 새 계정으로 시작합니다.</li>
+    </ul>
+    <form method="post" onsubmit="return confirm('탈퇴 후에는 되돌릴 수 없습니다. 진행할까요?')">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="danger" type="submit">탈퇴하기</button>
+    </form>
+    <a class="keep" href="{{ url_for('my.index') }}">계속 이용할게요</a>
+  </main>
+{% endblock %}
